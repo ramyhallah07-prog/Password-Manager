@@ -3,6 +3,16 @@ from random import choices
 import secrets
 import dae
 
+
+
+
+
+# whar suka in the world is happening right now
+
+
+
+
+
 class PasswordManager:
     def __init__(self):
         self.user = None
