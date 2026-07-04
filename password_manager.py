@@ -2,9 +2,8 @@ import string
 from random import choices
 import secrets
 import dae
-
-
-
+import time
+import os
 
 
 # whar suka in the world is happening right now
@@ -35,7 +34,7 @@ class PasswordManager:
             if not self.login:
                 self.login = True
                 self.user = username
-                dae.decrypt_folder(self.user)
+                if os.path.isfile(f'users/{self.user}.zip') : dae.decrypt_folder(self.user)
                 return f'{self.user} Logged in Successfully'
             elif self.login and self.user == username:
                 return 'user already logegd in'
@@ -202,6 +201,7 @@ def main():
     # print(pm.logout_user('zahra'))
     # print(pm.remove_user('ramy123'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
+
     print(pm.add_account('google', 'ramy', 'ramy20074'))
     print(pm.add_account('instagram', 'ramy', 'ramy20074'))
     print(pm.add_account('github', 'ramy', 'ramy20074'))
@@ -209,6 +209,7 @@ def main():
     print(pm.change_password('facebook', 'ramy', 'ramy13'))
     print(pm.delete_account('facebook', 'ramy'))
     print(pm.show_account('github', 'bousba3'))
+    # pm.logout_user('zahra')
 
     
 

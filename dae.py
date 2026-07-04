@@ -3,12 +3,7 @@ from cryptography.fernet import Fernet
 import hashlib
 import os
 import shutil
-
-
-
-
-# testing github remote
-print('suka git')
+import subprocess
 
 
 def main():
@@ -36,6 +31,8 @@ def main():
     # print(loguserin('zahra', 'ramy123'))
     user = "zahra"
     url = "facebook.csv"
+    generate_uk(user)
+    print(uk_loader(user))
     # encrypt_folder(user)
     # decrypt_folder(user)
     # print(account_validation('users/zahra/facebook.csv', 'ramy'), 'account validation')
@@ -150,7 +147,6 @@ def decrypt_folder(user):
     shutil.unpack_archive(f'users/{user}.zip', f'users/{user}')
     os.remove(f'users/{user}.zip')
 
-
 def decrypt(cipher_password):
     key = keyloeader()
     fernet = Fernet(key)
@@ -213,6 +209,22 @@ def show_account(path, username):
             if account['username'] == username:
                 return account
         return False
-    
+
+def generate_uk(user):
+    uk = Fernet.generate_key()
+    kuser_path = os.path.join('users', user)
+    os.makedirs(kuser_path, exist_ok=True)
+    secret_path = os.path.join(kuser_path, 'systemfiles1')
+    if not os.path.isfile(secret_path):
+        with open(secret_path, 'wb') as user_key:
+            user_key.write(uk)
+        subprocess.run(['attrib', '+h', secret_path], shell=True)
+    else: 
+        return
+
+def uk_loader(user):
+    if os.path.isfile(f'users/{user}/systemfiles1'):
+        return open(f'users/{user}/systemfiles1', 'rb').read()
+
 if __name__ == '__main__':
     main()
