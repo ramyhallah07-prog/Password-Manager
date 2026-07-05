@@ -31,9 +31,11 @@ def main():
     # print(loguserin('zahra', 'ramy123'))
     user = "zahra"
     url = "facebook.csv"
-    generate_uk(user)
-    print(uk_loader(user))
-    # encrypt_folder(user)
+    # generate_uk(user)
+    cipher = encrypt('ramyhallah2007', user)
+    print(cipher)
+    print(decrypt(cipher, user))
+    # print(decrypt(cipher))
     # decrypt_folder(user)
     # print(account_validation('users/zahra/facebook.csv', 'ramy'), 'account validation')
     # print(change_password(f'users/{user}/{url}', 'ramy', 'ramy123'), 'change password')
@@ -48,12 +50,16 @@ def main():
 
     # print(account_validation('users/users.csv', 'saber'))
     
-
+#mJyCw2ZetH5nzbenbva11_tfokE2Zs9N-OQxAUJxjjw=
 
 Mpass = ''
 h = hashlib.new('sha512')
 h.update(Mpass.encode())
 Mpass = h.hexdigest()
+
+def test(*arg):
+    if arg : return True
+    if not arg : return False
 
 
 def loguserin(username, MasterPassword):
@@ -131,8 +137,9 @@ def decrypt_file(filename):
     with open(filename, 'wb') as file:
         file.write(oreginal_data)
        
-def encrypt(password):
-    key = keyloeader()
+def encrypt(password, user= None):
+    if not user: key = keyloeader()
+    if user: key = uk_loader(user)
     fernet = Fernet(key)
     cipher_password = fernet.encrypt(password.encode()).decode()
     return cipher_password
@@ -147,8 +154,9 @@ def decrypt_folder(user):
     shutil.unpack_archive(f'users/{user}.zip', f'users/{user}')
     os.remove(f'users/{user}.zip')
 
-def decrypt(cipher_password):
-    key = keyloeader()
+def decrypt(cipher_password, user= None):
+    if not user : key = keyloeader()
+    if user : key = uk_loader(user)
     fernet = Fernet(key)
     password = fernet.decrypt(cipher_password.encode()).decode()
     return password
@@ -169,13 +177,15 @@ def creat_account(user, url, username, password):
     os.makedirs(path, exist_ok= True)
     add_account(csv_path, username, password)
 
-def add_account(path, username, password, encrypting= True):
+def add_account(path, username, password, encrypting= True, *user):
     if not account_validation(path, username):
         with open(path, 'a', newline='') as adder:
             file_validator(path)
             adder = csv.DictWriter(adder, fieldnames=['username', 'password'])
-            if encrypting:
+            if encrypting and not user:
                 adder.writerow({'username' : username, 'password': encrypt(password)})
+            elif encrypting and user:
+                adder.writerow({'username' : username, 'password': encrypt(password, user)})
             elif not encrypting:
                 adder.writerow({'username' : username, 'password' : password})
         return True

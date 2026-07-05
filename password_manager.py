@@ -209,7 +209,7 @@ def main():
     print(pm.change_password('facebook', 'ramy', 'ramy13'))
     print(pm.delete_account('facebook', 'ramy'))
     print(pm.show_account('github', 'bousba3'))
-    # pm.logout_user('zahra')
+    pm.logout_user('zahra')
 
     
 
