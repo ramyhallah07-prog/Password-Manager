@@ -196,8 +196,8 @@ def main():
     hello = 'shut up'
     pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
-    pm.create_password_maneger_account('el-hawwary', 'ramy123')
-    # print(pm.login_user('el-hawwary', 'ramy123'))
+    # pm.create_password_maneger_account('el-hawwary', 'ramy123')
+    print(pm.login_user('el-hawwary', 'ramy123'))
     # print(pm.login_user('bouchra', 'ramy123'))
     # print(pm.logout_user('zahra'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
@@ -212,38 +212,13 @@ def main():
     pm.logout_user('el-hawwary')
     # pm.login_user('ramy', 'Ramy@04_2007')
     pm.create_password_maneger_account('ramy', 'Ramy@04_2007')
+    # pm.login_user('ramy', 'Ramy@04_2007')
     print(pm.add_account('google', 'ramyhallah07@gmail.com', 'Ramy@04_2007'))
     print(pm.show_account('google', 'ramyhallah07@gmail.com'))
     print(pm.remove_user('Ramy@04_2007'))
+    # pm.logout_user('ramy')
 
-
-
-
-    # generated_password = pm.password_generator(13, 4, 4, 4, 5, 'ramy')
-    # print(generated_password)
-    # pm.add_account('www.google.com', 'sabersukkakka@gmail.com', 'ramy@2007')
-    # pm.add_account('www.google.com', 'ramy20074@gmail.com', 'ramy@0402')
-    # pm.add_account('www.google.com', 'ramy.uchiha7@gmail.com', 'zahrablyat')
-    # pm.delete_account('google.csv', 'ramy20074@gmail.com')
-    # pm.show_account('www.google.com', 'ramy.uchiha7@gmail.com')
-    # pm.change_password('www.google.com', 'ramy.uchiha7@gmail.com', 'ramy567')
-    # pm.show_account('www.google.com', 'ramy.uchiha7@gmail.com')
-
-    # print(pm.users)
-
-
-
-
-    # ramy = PasswordManager()
-    # ramy.add_account('www.zahra.dz', 'zahrablyat@suka.dz', 'fuckzahra123')
-    # print(ramy.show_accounts)
-
-
-    # print(f"password_generator(20, 0, 0, 0, 0, '') {len('VK`3p>^BsC;n9GLT<!ck')}")
-    # print(f"password_generator(20, 4, 0, 0, 0, '') {len('!>9EcyxgXxZK+DIO')}")
-    # print(f"password_generator(20, 4, 4, 0, 0, '') {len('vw"C>WwM]H}K')}")
-    # print(f"password_generator(20, 4, 4, 4, 0, '') {len('59?a)njR')}")
-    # print(gg)
+# os.system(f'attrib +h "users"')
 
 
 
