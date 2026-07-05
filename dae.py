@@ -18,10 +18,9 @@ def main():
     # generate_uk('ramy')
     user = 'ramy'
     # passw = encrypt('hrgmhrmhrgm',user)
-    # creat_account('ramy', 'google', 'ramy20074@gmail.com', 'ramy@1812')
-    # add_account('users/ramy/google.csv', 'ramyhallah', 'ramy@0402', user='ramy')
-    print(decrypt('gAAAAABqSmz1Ntwmr2LgrXIHwQgzaeC4VBI77V4iVHTcTIHYmMu46p9GgbLpB8PbLMW-ZldBptZKwVpEpCwc39STyyXmU5JPxg==', user))
-    print(decrypt('gAAAAABqSm2Af4CTkrP35LC-dN9mn-upjC5Em5UQHiQpMRWtIOFGlBIB5IaZJw2O93OVrqg2TbQ61fiuXlJHwKIX5iLJ7fg8ZA=='))
+    creat_account('ramy', 'google', 'ramy20074@gmail.com', 'ramy@1812', uk= True)
+    # print(decrypt('gAAAAABqSpxVzgv3X-KKLM-XlA5jIiAXnfSEhARipHin2gbxei2xbfC_ATmTdCZrcwY159Rri4iynITv9iysMWG89A4CEju7Nw==', user))
+    # print(decrypt('gAAAAABqSm2Af4CTkrP35LC-dN9mn-upjC5Em5UQHiQpMRWtIOFGlBIB5IaZJw2O93OVrqg2TbQ61fiuXlJHwKIX5iLJ7fg8ZA=='))
     # print(decrypt(passw, user))
     # myaccount = show_account('users/ramy/google.csv', 'ramy20074@gmail.com')
     # print(decrypt(myaccount['password'], user))
@@ -176,9 +175,10 @@ def creat_account(user, url, username, password, uk = False):
     csv_path = os.path.join('users', user, f'{url}.csv')
     os.makedirs(path, exist_ok= True)
     if uk :
-        # generate_uk(user)
-        add_account(csv_path, username, password,user=True)
-    if not uk: add_account(csv_path, username, password)
+        # print(csv_path + '\n','#'*40 + '\n', username + '\n','#'*40 + '\n', password)
+        generate_uk(user)
+        add_account(csv_path, username, password,user=user)
+    if not uk:add_account(csv_path, username, password)
 
 def add_account(path, username, password, encrypting= True, user = None):
     if not account_validation(path, username):
