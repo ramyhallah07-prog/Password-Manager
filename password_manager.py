@@ -4,13 +4,7 @@ import secrets
 import dae
 import time
 import os
-
-
-# whar suka in the world is happening right now
-
-
-
-
+# os.system(f'attrib +h "users"')
 
 class PasswordManager:
     def __init__(self):
@@ -20,6 +14,8 @@ class PasswordManager:
     def create_password_maneger_account(self, user, master_password):#Done
         if dae.account_validation('users/users.csv', user):
             raise ValueError('username already existe')
+        if self.passwors_validation(master_password) < 60: 
+            raise AttributeError('Your Password is too weak')
         self.user = user
         dae.add_user(user, master_password)
         dae.generate_uk(user)
@@ -115,15 +111,10 @@ class PasswordManager:
             return 'account was not found'
 
     def password_generator(self, lenth, lower = None , upper = None , nums = None , spetial_char = None, addition = None):
-        global char
         char = string.ascii_letters
-        global char_low
         char_low = string.ascii_lowercase
-        global char_up
         char_up = string.ascii_uppercase
-        global num
         num = string.digits
-        global spetials
         spetials = string.punctuation
         additions = addition
         _password = ''
@@ -143,6 +134,12 @@ class PasswordManager:
         return password
        
     def passwors_validation(self, password):
+        char = string.ascii_letters
+        char_low = string.ascii_lowercase
+        char_up = string.ascii_uppercase
+        num = string.digits
+        spetials = string.punctuation
+
         COMMON_PATTERNS = [
     "1234", "12345", "123456", "123456789",
     "password", "password123", "admin", "admin123",
@@ -177,14 +174,14 @@ class PasswordManager:
             password_score -= 20
         if any(patern in password.lower() for patern in COMMON_PATTERNS):
                 password_score -= 30
-        if 0 <= password_score < 30:
-            print('Weak Password!!')
-        elif 30 <= password_score < 60:
-            print("Normal Password")
-        elif 60 <= password_score < 90:
-            print("Strong Password")    
-        elif password_score >= 90:
-            print("Very Strong Password!!")
+        # if 0 <= password_score < 30:
+        #     print('Weak Password!!')
+        # elif 30 <= password_score < 60:
+        #     print("Normal Password")
+        # elif 60 <= password_score < 90:
+        #     print("Strong Password")    
+        # elif password_score >= 90:
+        #     print("Very Strong Password!!")
         return max(password_score, 0)
 
 
@@ -196,8 +193,8 @@ def main():
     hello = 'shut up'
     pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
-    # pm.create_password_maneger_account('el-hawwary', 'ramy123')
-    print(pm.login_user('el-hawwary', 'ramy123'))
+    pm.create_password_maneger_account('el-hawwary', 'Ramy@04_2007')
+    # print(pm.login_user('el-hawwary', 'ramy123'))
     # print(pm.login_user('bouchra', 'ramy123'))
     # print(pm.logout_user('zahra'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
@@ -218,7 +215,6 @@ def main():
     print(pm.remove_user('Ramy@04_2007'))
     # pm.logout_user('ramy')
 
-# os.system(f'attrib +h "users"')
 
 
 
