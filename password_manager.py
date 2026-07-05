@@ -22,6 +22,7 @@ class PasswordManager:
             raise ValueError('username already existe')
         self.user = user
         dae.add_user(user, master_password)
+        dae.generate_uk(user)
         answer = input('do you want to login automaticly? (y/n): ')
         if answer == 'y':
             self.login = True
@@ -84,7 +85,7 @@ class PasswordManager:
         if not self.login:
             raise ValueError('Login Failed')
         elif self.login:
-            dae.creat_account(self.user, url, username, password)
+            dae.creat_account(self.user, url, username, password, True)
             return 'Account added seccessfully'
         else:
             print(f'username {username} already exicte')
@@ -194,9 +195,9 @@ class PasswordManager:
 def main():
     hello = 'shut up'
     pm = PasswordManager()
-    # pm.create_password_maneger_account('benyator', 'ramy123')
     # pm.create_password_maneger_account('zahra', 'ramy123')
-    print(pm.login_user('zahra', 'ramy123'))
+    # pm.create_password_maneger_account('el-hawwary', 'ramy123')
+    print(pm.login_user('el-hawwary', 'ramy123'))
     # print(pm.login_user('bouchra', 'ramy123'))
     # print(pm.logout_user('zahra'))
     # print(pm.remove_user('ramy123'))
@@ -208,10 +209,11 @@ def main():
     print(pm.add_account('facebook', 'ramy', 'ramy20074'))
     print(pm.change_password('facebook', 'ramy', 'ramy13'))
     print(pm.delete_account('facebook', 'ramy'))
-    print(pm.show_account('github', 'bousba3'))
-    pm.logout_user('zahra')
+    print(pm.show_account('github', 'ramy'))
+    pm.logout_user('el-hawwary')
 
-    
+    pm.login_user('zahra', 'ramy123')
+    pm.show_account('google', 'ramy')
 
 
 
