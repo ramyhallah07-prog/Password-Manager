@@ -47,9 +47,9 @@ class PasswordManager:
         if not self.login:
             raise AttributeError('you\'re not logged in')
         if self.user == username:
+            dae.encrypt_folder(self.user)
             self.user = None
             self.login = False
-            dae.encrypt_folder(username)
             return f'{username} Logged out Successfully'
         elif self.user != username:
             return f'you\'re not logged in as {username}'
@@ -73,9 +73,9 @@ class PasswordManager:
             raise ValueError('Login Failed')
         url = f'{url}.csv'
         if dae.account_validation(f'users/{self.user}',url, isdir= True) and dae.show_account(f'users/{self.user}/{url}', username):
-            if dae.decrypt(dae.show_account(f'users/{self.user}/{url}', username)['password']) == new_password:
+            if dae.decrypt(dae.show_account(f'users/{self.user}/{url}', username)['password'], self.user) == new_password:
                 return 'You can\'t change the password into the same password'     
-            elif dae.show_account(f'users/{self.user}/{url}', username)["username"] == username and dae.decrypt(dae.show_account(f'users/{self.user}/{url}', username)["password"]) != new_password:
+            elif dae.show_account(f'users/{self.user}/{url}', username)["username"] == username and dae.decrypt(dae.show_account(f'users/{self.user}/{url}', username)["password"], self.user) != new_password:
                 dae.change_password(f'users/{self.user}/{url}', username, new_password)
                 return 'password has been changed seccessfully'
         else:
@@ -85,7 +85,7 @@ class PasswordManager:
         if not self.login:
             raise ValueError('Login Failed')
         elif self.login:
-            dae.creat_account(self.user, url, username, password, True)
+            dae.creat_account(self.user, url, username, password, uk=True)
             return 'Account added seccessfully'
         else:
             print(f'username {username} already exicte')
@@ -110,7 +110,7 @@ class PasswordManager:
             raise ValueError('Login Failed')
         url = f'{url}.csv'
         if dae.account_validation(f'users/{self.user}/{url}', username):
-            return f'Usename: {dae.show_account(f'users/{self.user}/{url}', username)['username']},  Password: {dae.decrypt(dae.show_account(f'users/{self.user}/{url}', username)['password'])}'
+            return f'Usename: {dae.show_account(f'users/{self.user}/{url}', username)['username']},  Password: {dae.decrypt(dae.show_account(f'users/{self.user}/{url}', username)['password'], self.user)}'
         else:
             return 'account was not found'
 
@@ -196,11 +196,10 @@ def main():
     hello = 'shut up'
     pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
-    # pm.create_password_maneger_account('el-hawwary', 'ramy123')
-    print(pm.login_user('el-hawwary', 'ramy123'))
+    pm.create_password_maneger_account('el-hawwary', 'ramy123')
+    # print(pm.login_user('el-hawwary', 'ramy123'))
     # print(pm.login_user('bouchra', 'ramy123'))
     # print(pm.logout_user('zahra'))
-    # print(pm.remove_user('ramy123'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
 
     print(pm.add_account('google', 'ramy', 'ramy20074'))
@@ -211,10 +210,11 @@ def main():
     print(pm.delete_account('facebook', 'ramy'))
     print(pm.show_account('github', 'ramy'))
     pm.logout_user('el-hawwary')
-
-    pm.login_user('zahra', 'ramy123')
-    pm.show_account('google', 'ramy')
-
+    # pm.login_user('ramy', 'Ramy@04_2007')
+    pm.create_password_maneger_account('ramy', 'Ramy@04_2007')
+    print(pm.add_account('google', 'ramyhallah07@gmail.com', 'Ramy@04_2007'))
+    print(pm.show_account('google', 'ramyhallah07@gmail.com'))
+    print(pm.remove_user('Ramy@04_2007'))
 
 
 
