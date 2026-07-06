@@ -4,7 +4,6 @@ import secrets
 import dae
 import time
 import os
-import csv
 
 
 class PasswordManager:
@@ -72,13 +71,11 @@ class PasswordManager:
         url = f'{url}.csv'
         path = f'users/{self.__user}/{url}'
         password = dae.show_account(path, username)['password']
-        print(dae.account_validation(f'users/{self.__user}',url, isdir= True) )
-        print(dae.show_account(path, username)['username'])
         if dae.account_validation(f'users/{self.__user}',url, isdir= True) and dae.show_account(path, username):
-        #     if dae.decrypt(password, self.__user) == new_password:
-        #         return 'You can\'t change the password into the same password'     
+            if dae.decrypt(password, self.__user) == new_password:
+                return 'You can\'t change the password into the same password'     
             if dae.show_account(path, username)["username"] == username and dae.decrypt(password, self.__user) != new_password:
-                dae.change_password(path, username, new_password)
+                dae.change_password(path, username, new_password, self.__user)
                 return 'password has been changed seccessfully'
         else:
             return 'account was not found'
@@ -87,6 +84,7 @@ class PasswordManager:
         if not self.__login:
             raise ValueError('Login Failed')
         elif dae.account_validation(f'users/{self.__user}/{url}.csv', username):
+            print(dae.uk_loader(self.__user))
             return f'username {username} already exicte in {url}'
         elif self.__login and not dae.account_validation(f'users/{self.__user}/{url}.csv', username):
             dae.creat_account(self.__user, url, username, password, uk=True)
@@ -202,19 +200,19 @@ def main():
     hello = 'shut up'
     pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
-    print(pm.login_user('el-hawwary', 'Ramy@04_2007'))
-    # pm.remove_user('el-hawwary', 'Ramy@04_2007')
-    # pm.create_password_maneger_account('el-hawwary', 'Ramy@04_2007')
     # print(pm.login_user('bouchra', 'ramy123'))
     # print(pm.logout_user('zahra'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
+    print(pm.login_user('el-hawwary', 'Ramy@04_2007'))
+    pm.remove_user('Ramy@04_2007')
+    # pm.create_password_maneger_account('el-hawwary', 'Ramy@04_2007')
 
-    print(pm.add_account('google', 'ramy', 'hrhrh'))
-    print(pm.add_account('instagram', 'ramy', 'drgndrgndrgn'))
-    print(pm.add_account('github', 'ramy', 'rgigigi74'))
-    print(pm.add_account('facebook', 'ramy', 'ramy1997'))
-    print(pm.show_account('facebook', 'ramy'))
-    print(pm.change_password('facebook', 'ramy', 'ramy grgr'))
+    # print(pm.add_account('google', 'ramy', 'hrhrh'))
+    # print(pm.add_account('instagram', 'ramy', 'drgndrgndrgn'))
+    # print(pm.add_account('github', 'ramy', 'rgigigi74'))
+    # print(pm.add_account('facebook', 'ramy', 'ramy1997'))
+    # print(pm.show_account('facebook', 'ramy'))
+    # print(pm.change_password('facebook', 'ramy', 'ramy grgr'))
     # print(pm.show_account('facebook', 'ramy'))
     # print(pm.delete_account('instagram', 'ramy'))
     # print(pm.show_account('github', 'ramy'))

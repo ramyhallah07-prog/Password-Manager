@@ -208,10 +208,10 @@ def remove_account(path, username):
     else:
         return 'account not fount'
     
-def change_password(path, username, new_password):
+def change_password(path, username, new_password, User=None):
     if account_validation(path, username):
         remove_account(path, username)
-        add_account(path, username, new_password)
+        add_account(path, username, new_password, user=User)
     else:
         return 'account not found'
 
@@ -231,7 +231,8 @@ def generate_uk(user):
     if not os.path.isfile(secret_path):
         with open(secret_path, 'wb') as user_key:
             user_key.write(uk)
-        subprocess.run(['attrib', '+h', secret_path], shell=True)
+        import stat
+        os.chmod(secret_path, stat.S_IREAD)
     else: 
         return
 
@@ -239,7 +240,7 @@ def uk_loader(user):
     if os.path.isfile(f'users/{user}/systemfiles1'):
         return open(f'users/{user}/systemfiles1', 'rb').read()
     else:
-        print('key was not found')
+        raise AttributeError('key was not found')
 
 if __name__ == '__main__':
     main()
