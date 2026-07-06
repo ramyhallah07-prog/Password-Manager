@@ -4,7 +4,6 @@ import secrets
 import dae
 import time
 import os
-# os.system(f'attrib +h "users"')
 
 class PasswordManager:
     def __init__(self):
@@ -19,12 +18,13 @@ class PasswordManager:
         self.user = user
         dae.add_user(user, master_password)
         dae.generate_uk(user)
+        os.system(f'attrib +h "users"')
         answer = input('do you want to login automaticly? (y/n): ')
         if answer == 'y':
             self.login = True
         elif answer == 'n':
             dae.encrypt_folder(self.user)
-            print('you need to login to continue')
+            return 'you need to login to continue'
 
     def login_user(self, username, master_password):#need to add the decryption for the file 
         if dae.loguserin(username, master_password):
@@ -193,8 +193,8 @@ def main():
     hello = 'shut up'
     pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
-    pm.create_password_maneger_account('el-hawwary', 'Ramy@04_2007')
-    # print(pm.login_user('el-hawwary', 'ramy123'))
+    # pm.create_password_maneger_account('el-hawwary', 'Ramy@04_2007')
+    print(pm.login_user('el-hawwary', 'Ramy@04_2007'))
     # print(pm.login_user('bouchra', 'ramy123'))
     # print(pm.logout_user('zahra'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
