@@ -7,57 +7,57 @@ import os
 
 class PasswordManager:
     def __init__(self):
-        self.user = None
-        self.login = False
+        self.__user = None
+        self.__login = False
     
     def create_password_maneger_account(self, user, master_password):#Done
         if dae.account_validation('users/users.csv', user):
             raise ValueError('username already existe')
         if self.passwors_validation(master_password) < 60: 
             raise AttributeError('Your Password is too weak')
-        self.user = user
+        self.__user = user
         dae.add_user(user, master_password)
         dae.generate_uk(user)
         os.system(f'attrib +h "users"')
         answer = input('do you want to login automaticly? (y/n): ')
         if answer == 'y':
-            self.login = True
+            self.__login = True
         elif answer == 'n':
-            dae.encrypt_folder(self.user)
+            dae.encrypt_folder(self.__user)
             return 'you need to login to continue'
 
     def login_user(self, username, master_password):#need to add the decryption for the file 
         if dae.loguserin(username, master_password):
-            if not self.login:
-                self.login = True
-                self.user = username
-                if os.path.isfile(f'users/{self.user}.zip') : dae.decrypt_folder(self.user)
-                return f'{self.user} Logged in Successfully'
-            elif self.login and self.user == username:
+            if not self.__login:
+                self.__login = True
+                self.__user = username
+                if os.path.isfile(f'users/{self.__user}.zip') : dae.decrypt_folder(self.__user)
+                return f'{self.__user} Logged in Successfully'
+            elif self.__login and self.__user == username:
                 return 'user already logegd in'
-            elif self.login and self.user != username:
-                return f'to login with {username} you should logout from the current account "{self.user}"'
+            elif self.__login and self.__user != username:
+                return f'to login with {username} you should logout from the current account "{self.__user}"'
         raise AttributeError('Failed to login')
     
     def logout_user(self, username):#need to add encryption to userfile
-        if not self.login:
+        if not self.__login:
             raise AttributeError('you\'re not logged in')
-        if self.user == username:
-            dae.encrypt_folder(self.user)
-            self.user = None
-            self.login = False
+        if self.__user == username:
+            dae.encrypt_folder(self.__user)
+            self.__user = None
+            self.__login = False
             return f'{username} Logged out Successfully'
-        elif self.user != username:
+        elif self.__user != username:
             return f'you\'re not logged in as {username}'
         
     def remove_user(self, master_password):#Done
-        if not self.login:
+        if not self.__login:
             raise AttributeError('You\'re not logged in')
         answer = input('are you sure you want to delete your Password Manager account? (y/n): ')
         if answer == 'y':
             confirmation = input('if you delete you Password Manager account all your passwords will desapear are you sure you want to do that? (y/n): ')
-            if confirmation == 'y' and self.login:
-                dae.delete_user(self.user, master_password)
+            if confirmation == 'y' and self.__login:
+                dae.delete_user(self.__user, master_password)
                 return 'your accout was deleted successfully all your data was erased'
             elif confirmation == 'n':
                 return 'the operation was canceled thank you for staying with us'
@@ -65,48 +65,48 @@ class PasswordManager:
             return 'the operation was canceled thank you for staying with us'
 
     def change_password(self, url, username, new_password):#Done
-        if not self.login:
+        if not self.__login:
             raise ValueError('Login Failed')
         url = f'{url}.csv'
-        if dae.account_validation(f'users/{self.user}',url, isdir= True) and dae.show_account(f'users/{self.user}/{url}', username):
-            if dae.decrypt(dae.show_account(f'users/{self.user}/{url}', username)['password'], self.user) == new_password:
+        if dae.account_validation(f'users/{self.__user}',url, isdir= True) and dae.show_account(f'users/{self.__user}/{url}', username):
+            if dae.decrypt(dae.show_account(f'users/{self.__user}/{url}', username)['password'], self.__user) == new_password:
                 return 'You can\'t change the password into the same password'     
-            elif dae.show_account(f'users/{self.user}/{url}', username)["username"] == username and dae.decrypt(dae.show_account(f'users/{self.user}/{url}', username)["password"], self.user) != new_password:
-                dae.change_password(f'users/{self.user}/{url}', username, new_password)
+            elif dae.show_account(f'users/{self.__user}/{url}', username)["username"] == username and dae.decrypt(dae.show_account(f'users/{self.__user}/{url}', username)["password"], self.__user) != new_password:
+                dae.change_password(f'users/{self.__user}/{url}', username, new_password)
                 return 'password has been changed seccessfully'
         else:
             return 'account was not found'
 
     def add_account(self, url, username, password):#Done
-        if not self.login:
+        if not self.__login:
             raise ValueError('Login Failed')
-        elif self.login:
-            dae.creat_account(self.user, url, username, password, uk=True)
+        elif dae.account_validation(f'users/{self.__user}/{url}.csv', username):
+            return f'username {username} already exicte in {url}'
+        elif self.__login and not dae.account_validation(f'users/{self.__user}/{url}.csv', username):
+            dae.creat_account(self.__user, url, username, password, uk=True)
             return 'Account added seccessfully'
-        else:
-            print(f'username {username} already exicte')
            
     def delete_account(self, url, username):#Done
-        if not self.login:
+        if not self.__login:
             raise ValueError('Login Failed')
         url = f'{url}.csv'
-        if not dae.account_validation(f'users/{self.user}/{url}', username):
+        if not dae.account_validation(f'users/{self.__user}/{url}', username):
             return 'couldn\'t find the account'
         answer = input('are you sure you want to delete your account? (y/n): ')
-        if answer == 'y' and self.login:
-            dae.remove_account(f'users/{self.user}/{url}', username)
+        if answer == 'y' and self.__login:
+            dae.remove_account(f'users/{self.__user}/{url}', username)
             return 'account was deleted sccessfully'
         elif answer == 'n':
             return 'the delete operation was canceled'
         else:
-            print('account was not found')
+            return 'account was not found'
    
     def show_account(self, url, username):#Done
-        if not self.login:
+        if not self.__login:
             raise ValueError('Login Failed')
         url = f'{url}.csv'
-        if dae.account_validation(f'users/{self.user}/{url}', username):
-            return f'Usename: {dae.show_account(f'users/{self.user}/{url}', username)['username']},  Password: {dae.decrypt(dae.show_account(f'users/{self.user}/{url}', username)['password'], self.user)}'
+        if dae.account_validation(f'users/{self.__user}/{url}', username):
+            return f'Usename: {dae.show_account(f'users/{self.__user}/{url}', username)['username']},  Password: {dae.decrypt(dae.show_account(f'users/{self.__user}/{url}', username)['password'], self.__user)}'
         else:
             return 'account was not found'
 
@@ -184,6 +184,8 @@ class PasswordManager:
         #     print("Very Strong Password!!")
         return max(password_score, 0)
 
+    def UI():
+        ...
 
 
 
@@ -199,20 +201,20 @@ def main():
     # print(pm.logout_user('zahra'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
 
-    print(pm.add_account('google', 'ramy', 'ramy20074'))
-    print(pm.add_account('instagram', 'ramy', 'ramy20074'))
-    print(pm.add_account('github', 'ramy', 'ramy20074'))
-    print(pm.add_account('facebook', 'ramy', 'ramy20074'))
-    print(pm.change_password('facebook', 'ramy', 'ramy13'))
+    print(pm.add_account('google', 'ramy', 'hrhrh'))
+    print(pm.add_account('instagram', 'ramy', 'drgndrgndrgn'))
+    print(pm.add_account('github', 'ramy', 'rgigigi74'))
+    print(pm.add_account('facebook', 'ramy', 'gngngn'))
+    # print(pm.change_password('facebook', 'ramy', 'ramy13'))
     print(pm.delete_account('facebook', 'ramy'))
     print(pm.show_account('github', 'ramy'))
-    pm.logout_user('el-hawwary')
+    # pm.logout_user('el-hawwary')
     # pm.login_user('ramy', 'Ramy@04_2007')
-    pm.create_password_maneger_account('ramy', 'Ramy@04_2007')
+    # pm.create_password_maneger_account('ramy', 'Ramy@04_2007')
     # pm.login_user('ramy', 'Ramy@04_2007')
-    print(pm.add_account('google', 'ramyhallah07@gmail.com', 'Ramy@04_2007'))
-    print(pm.show_account('google', 'ramyhallah07@gmail.com'))
-    print(pm.remove_user('Ramy@04_2007'))
+    # print(pm.add_account('google', 'ramyhallah07@gmail.com', 'Ramy@04_2007'))
+    # print(pm.show_account('google', 'ramyhallah07@gmail.com'))
+    # print(pm.remove_user('Ramy@04_2007'))
     # pm.logout_user('ramy')
 
 
