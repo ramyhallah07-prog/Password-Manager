@@ -4,6 +4,8 @@ import secrets
 import dae
 import time
 import os
+import csv
+
 
 class PasswordManager:
     def __init__(self):
@@ -68,11 +70,15 @@ class PasswordManager:
         if not self.__login:
             raise ValueError('Login Failed')
         url = f'{url}.csv'
-        if dae.account_validation(f'users/{self.__user}',url, isdir= True) and dae.show_account(f'users/{self.__user}/{url}', username):
-            if dae.decrypt(dae.show_account(f'users/{self.__user}/{url}', username)['password'], self.__user) == new_password:
-                return 'You can\'t change the password into the same password'     
-            elif dae.show_account(f'users/{self.__user}/{url}', username)["username"] == username and dae.decrypt(dae.show_account(f'users/{self.__user}/{url}', username)["password"], self.__user) != new_password:
-                dae.change_password(f'users/{self.__user}/{url}', username, new_password)
+        path = f'users/{self.__user}/{url}'
+        password = dae.show_account(path, username)['password']
+        print(dae.account_validation(f'users/{self.__user}',url, isdir= True) )
+        print(dae.show_account(path, username)['username'])
+        if dae.account_validation(f'users/{self.__user}',url, isdir= True) and dae.show_account(path, username):
+        #     if dae.decrypt(password, self.__user) == new_password:
+        #         return 'You can\'t change the password into the same password'     
+            if dae.show_account(path, username)["username"] == username and dae.decrypt(password, self.__user) != new_password:
+                dae.change_password(path, username, new_password)
                 return 'password has been changed seccessfully'
         else:
             return 'account was not found'
@@ -106,7 +112,8 @@ class PasswordManager:
             raise ValueError('Login Failed')
         url = f'{url}.csv'
         if dae.account_validation(f'users/{self.__user}/{url}', username):
-            return f'Usename: {dae.show_account(f'users/{self.__user}/{url}', username)['username']},  Password: {dae.decrypt(dae.show_account(f'users/{self.__user}/{url}', username)['password'], self.__user)}'
+            password = dae.show_account(f'users/{self.__user}/{url}', username)['password']
+            return f'Usename: {username},  Password: {dae.decrypt(password, self.__user)}'
         else:
             return 'account was not found'
 
@@ -195,8 +202,9 @@ def main():
     hello = 'shut up'
     pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
-    # pm.create_password_maneger_account('el-hawwary', 'Ramy@04_2007')
     print(pm.login_user('el-hawwary', 'Ramy@04_2007'))
+    # pm.remove_user('el-hawwary', 'Ramy@04_2007')
+    # pm.create_password_maneger_account('el-hawwary', 'Ramy@04_2007')
     # print(pm.login_user('bouchra', 'ramy123'))
     # print(pm.logout_user('zahra'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
@@ -204,10 +212,12 @@ def main():
     print(pm.add_account('google', 'ramy', 'hrhrh'))
     print(pm.add_account('instagram', 'ramy', 'drgndrgndrgn'))
     print(pm.add_account('github', 'ramy', 'rgigigi74'))
-    print(pm.add_account('facebook', 'ramy', 'gngngn'))
-    # print(pm.change_password('facebook', 'ramy', 'ramy13'))
-    print(pm.delete_account('facebook', 'ramy'))
-    print(pm.show_account('github', 'ramy'))
+    print(pm.add_account('facebook', 'ramy', 'ramy1997'))
+    print(pm.show_account('facebook', 'ramy'))
+    print(pm.change_password('facebook', 'ramy', 'ramy grgr'))
+    # print(pm.show_account('facebook', 'ramy'))
+    # print(pm.delete_account('instagram', 'ramy'))
+    # print(pm.show_account('github', 'ramy'))
     # pm.logout_user('el-hawwary')
     # pm.login_user('ramy', 'Ramy@04_2007')
     # pm.create_password_maneger_account('ramy', 'Ramy@04_2007')
@@ -231,3 +241,50 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# """
+
+# Traceback (most recent call last):
+#   File "c:\Users\ramyh\Password-Manager\password_manager.py", line 243, in <module>
+#     main()
+#     ~~~~^^
+#   File "c:\Users\ramyh\Password-Manager\password_manager.py", line 212, in main
+#     print(pm.add_account('google', 'ramy', 'hrhrh'))
+#           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "c:\Users\ramyh\Password-Manager\password_manager.py", line 92, in add_account
+#     dae.creat_account(self.__user, url, username, password, uk=True)
+#     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "c:\Users\ramyh\Password-Manager\dae.py", line 180, in creat_account
+#     add_account(csv_path, username, password,user=user)
+#     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "c:\Users\ramyh\Password-Manager\dae.py", line 189, in add_account
+#     adder.writerow({'username' : username, 'password': encrypt(password, user)})
+#                                                        ~~~~~~~^^^^^^^^^^^^^^^^
+#   File "c:\Users\ramyh\Password-Manager\dae.py", line 145, in encrypt
+#     fernet = Fernet(key)
+#   File "C:\Users\ramyh\AppData\Local\Programs\Python\Python314\Lib\site-packages\cryptography\fernet.py", line 35, in __init__
+#     key = base64.urlsafe_b64decode(key)
+#   File "C:\Users\ramyh\AppData\Local\Programs\Python\Python314\Lib\base64.py", line 129, in urlsafe_b64decode
+#     s = _bytes_from_decode_data(s)
+#   File "C:\Users\ramyh\AppData\Local\Programs\Python\Python314\Lib\base64.py", line 42, in _bytes_from_decode_data
+#     raise TypeError("argument should be a bytes-like object or ASCII "
+#                     "string, not %r" % s.__class__.__name__) from None
+# TypeError: argument should be a bytes-like object or ASCII string, not 'NoneType'
+#       f0y4hZH2RdITx7w2VUzxjSxJ_hS44egue-8eWN99nVs=
+# """
