@@ -202,10 +202,13 @@ def UI():
             username = input('Usernaem : '.strip())
             password = input('Password : ')
             pm.create_password_maneger_account(username, password)
+            print(f'Keep this recovery key in a safe place\nRecovery key:"{dae.add_user(MastrPassword= password, return_password=True)}"')
         elif operation == 2:
             os.system('exit')
         else:
             raise AttributeError('unavailable Operation')
+        
+    pm.logout_user(username)
     
 
 
@@ -213,15 +216,15 @@ def UI():
 
 
 def main():
-    UI()
+    # UI()
     hello = 'shut up'
     pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
-    # print(pm.login_user('bouchra', 'ramy123'))
+    print(pm.login_user('ramy', 'Ramy@18_2016'))
     # print(pm.logout_user('zahra'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
     # print(pm.login_user('el-hawwary', 'Ramy@04_2007'))
-    # pm.remove_user('Ramy@04_2007')
+    pm.remove_user('Ramy@18_2016')
     # pm.create_password_maneger_account('el-hawwary', 'Ramy@04_2007')
 
     # print(pm.add_account('google', 'ramy', 'hrhrh'))
