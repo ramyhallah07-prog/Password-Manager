@@ -210,21 +210,25 @@ def UI():
         
     pm.logout_user(username)
     
-
+def remove(username, password):
+    rm = PasswordManager()
+    rm.login_user(username, password)
+    rm.remove_user(password)
 
 
 
 
 def main():
-    # UI()
-    hello = 'shut up'
-    pm = PasswordManager()
+    # remove('ramy', 'Ramy@04_2007')
+    UI()
+    # hello = 'shut up'
+    # pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
-    print(pm.login_user('ramy', 'Ramy@18_2016'))
+    # print(pm.login_user('ramy', 'Ramy@18_2016'))
     # print(pm.logout_user('zahra'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
-    # print(pm.login_user('el-hawwary', 'Ramy@04_2007'))
-    pm.remove_user('Ramy@18_2016')
+    # print(pm.login_user('el-hawwary',))
+    # pm.remove_user('Ramy@18_2016')
     # pm.create_password_maneger_account('el-hawwary', 'Ramy@04_2007')
 
     # print(pm.add_account('google', 'ramy', 'hrhrh'))

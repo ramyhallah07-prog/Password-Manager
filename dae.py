@@ -76,13 +76,18 @@ def loguserin(username, MasterPassword):
                 return True
         return False               
 
-def add_user(username, MastrPassword):
+def add_user(username = None, MastrPassword = None,  return_password = False):
     user_path = 'users/users.csv'
     hmp = hashlib.new('sha512')
     hmp.update(MastrPassword.encode())
     MastrPassword = hmp.hexdigest()
-    add_account(user_path, username, MastrPassword, encrypting=False)
-    os.makedirs(f'users/{username}', exist_ok=True)
+    if not return_password:
+        add_account(user_path, username, MastrPassword, encrypting=False)
+        os.makedirs(f'users/{username}', exist_ok=True)
+    elif return_password and not username:
+        return MastrPassword
+    elif not username and not MastrPassword:
+        raise AttributeError('can\'t create empty account')
 
 def delete_user(username, MasterPassword):
     if loguserin(username, MasterPassword):
