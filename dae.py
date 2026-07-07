@@ -65,10 +65,13 @@ h.update(Mpass.encode())
 Mpass = h.hexdigest()
 
 
-def loguserin(username, MasterPassword):
-    hmp = hashlib.new('sha512')
-    hmp.update(MasterPassword.encode())
-    MasterPassword = hmp.hexdigest()
+def loguserin(username, MasterPassword, encrypt = True):
+    if encrypt:
+        hmp = hashlib.new('sha512')
+        hmp.update(MasterPassword.encode())
+        MasterPassword = hmp.hexdigest()
+    # elif not encrypt:
+    #     MasterPassword = MasterPassword.encode()
     with open('users/users.csv', 'r') as usersCSV:
         users = csv.DictReader(usersCSV)
         for user in users: 
@@ -76,14 +79,14 @@ def loguserin(username, MasterPassword):
                 return True
         return False               
 
-def add_user(username = None, MastrPassword = None,  return_password = False):
+def add_user(username = None, MastrPassword = None,  return_password = False, change_password = False):
     user_path = 'users/users.csv'
     hmp = hashlib.new('sha512')
     hmp.update(MastrPassword.encode())
     MastrPassword = hmp.hexdigest()
     if not return_password:
         add_account(user_path, username, MastrPassword, encrypting=False)
-        os.makedirs(f'users/{username}', exist_ok=True)
+        if not change_password: os.makedirs(f'users/{username}', exist_ok=True)
     elif return_password and not username:
         return MastrPassword
     elif not username and not MastrPassword:

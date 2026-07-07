@@ -38,7 +38,8 @@ class PasswordManager:
                 return 'user already logegd in'
             elif self.__login and self.__user != username:
                 return f'to login with {username} you should logout from the current account "{self.__user}"'
-        raise AttributeError('Failed to login')
+        elif not dae.loguserin(username, master_password):
+            return 'Wrong password'
     
     def logout_user(self, username):#need to add encryption to userfile
         if not self.__login:
@@ -64,6 +65,15 @@ class PasswordManager:
                 return 'the operation was canceled thank you for staying with us'
         elif answer == 'n':
             return 'the operation was canceled thank you for staying with us'
+
+    def change_user_password(username, new_masterpassword, masterpassword = None, forgotpassword= False):
+        if forgotpassword:
+            dae.remove_account('users/users.csv', username)
+            dae.add_user(username, new_masterpassword, change_password=True)
+        else:
+            if dae.loguserin(username, masterpassword):
+                dae.remove_account('users/users.csv', username)
+                dae.add_user(username, new_masterpassword, change_password=True)
 
     def change_password(self, url, username, new_password):#Done
         if not self.__login:
@@ -194,7 +204,32 @@ def UI():
     if dae.file_validator('users/users.csv'):
         print('1- Create New PasswordManager Account\n2-Login with existing PasswordManager Account\n3- Exit')
         operation = int(input('Operation : '))
-        print(operation)
+        if operation == 1:
+            username = input('Usernaem : ').strip()
+            password = input('Password : ')
+            print(pm.create_password_maneger_account(username, password))
+            print(f'Keep this recovery key in a safe place\nRecovery key:"{dae.add_user(MastrPassword= password, return_password=True)}"')
+        elif operation == 2:
+            username = input('Usernaem : ').strip()
+            password = input('Password : ')
+            print(pm.login_user(username, password))
+            if pm.login_user(username, password) == 'Wrong password':
+                print('Availible operations: \n1-Forgot Password\n2-Exit')
+                operation = int(input('Operation : '))
+                tries = 3
+                if operation == 1:
+                    recovery_key = input('Enter Your recovery key : ')
+                    print(username)
+                    while tries:
+                        tries -= 1
+                        if dae.loguserin(username, recovery_key, encrypt= False):
+                            new_password = input('Enter you new password : ')
+                            pm.change_user_password(username, new_password, forgotpassword=True)
+                            break
+                            
+                    
+        elif operation == 3:
+            os.system('exit')
     else:
         print('1- Create PasswordManager Account\n2- Exit')
         operation = int(input('Operation : '))
@@ -208,7 +243,7 @@ def UI():
         else:
             raise AttributeError('unavailable Operation')
         
-    pm.logout_user(username)
+    # pm.logout_user(username)
     
 def remove(username, password):
     rm = PasswordManager()
@@ -221,7 +256,6 @@ def remove(username, password):
 def main():
     # remove('ramy', 'Ramy@04_2007')
     UI()
-    # hello = 'shut up'
     # pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
     # print(pm.login_user('ramy', 'Ramy@18_2016'))
