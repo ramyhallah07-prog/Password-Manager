@@ -70,10 +70,12 @@ class PasswordManager:
         if forgotpassword:
             dae.remove_account('users/users.csv', username)
             dae.add_user(username, new_masterpassword, change_password=True)
+            return 'Password Changed Seccessfully'
         else:
             if dae.loguserin(username, masterpassword):
                 dae.remove_account('users/users.csv', username)
                 dae.add_user(username, new_masterpassword, change_password=True)
+            return 'Password Changed Seccessfully'
 
     def change_password(self, url, username, new_password):#Done
         if not self.__login:
@@ -89,6 +91,10 @@ class PasswordManager:
                 return 'password has been changed seccessfully'
         else:
             return 'account was not found'
+
+    @property
+    def log_status(self):
+        return self.__login
 
     def add_account(self, url, username, password):#Done
         if not self.__login:
@@ -216,18 +222,24 @@ def UI():
             if pm.login_user(username, password) == 'Wrong password':
                 print('Availible operations: \n1-Forgot Password\n2-Exit')
                 operation = int(input('Operation : '))
-                tries = 3
+                tries = 2
                 if operation == 1:
                     recovery_key = input('Enter Your recovery key : ')
-                    print(username)
                     while tries:
                         tries -= 1
                         if dae.loguserin(username, recovery_key, encrypt= False):
                             new_password = input('Enter you new password : ')
-                            pm.change_user_password(username, new_password, forgotpassword=True)
+                            print(pm.change_user_password(username, new_password, forgotpassword=True))
+                            login = input('Do you want to login? (y/n) : ')
+                            if login == 'y':
+                                print(pm.login_user(username, new_password))
                             break
-                            
-                    
+                        recovery_key = input('wrong recovery key please confirm from it and incert it again: ')
+                    if tries == 0:
+                        raise ValueError('wrong recovery key')    
+            if pm.log_status:
+                print('Availible operations:\n')
+
         elif operation == 3:
             os.system('exit')
     else:
@@ -242,8 +254,10 @@ def UI():
             os.system('exit')
         else:
             raise AttributeError('unavailable Operation')
-        
-    # pm.logout_user(username)
+
+    if pm.log_status:
+        time.sleep(20)
+        pm.logout_user(username)
     
 def remove(username, password):
     rm = PasswordManager()
