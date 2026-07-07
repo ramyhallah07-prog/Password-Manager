@@ -84,7 +84,6 @@ class PasswordManager:
         if not self.__login:
             raise ValueError('Login Failed')
         elif dae.account_validation(f'users/{self.__user}/{url}.csv', username):
-            print(dae.uk_loader(self.__user))
             return f'username {username} already exicte in {url}'
         elif self.__login and not dae.account_validation(f'users/{self.__user}/{url}.csv', username):
             dae.creat_account(self.__user, url, username, password, uk=True)
@@ -189,22 +188,40 @@ class PasswordManager:
         #     print("Very Strong Password!!")
         return max(password_score, 0)
 
-    def UI():
-        ...
+def UI():
+    pm = PasswordManager()
+    print(f'{'*'*80}\nAvailible operations:')
+    if dae.file_validator('users/users.csv'):
+        print('1- Create New PasswordManager Account\n2-Login with existing PasswordManager Account\n3- Exit')
+        operation = int(input('Operation : '))
+        print(operation)
+    else:
+        print('1- Create PasswordManager Account\n2- Exit')
+        operation = int(input('Operation : '))
+        if operation == 1:
+            username = input('Usernaem : '.strip())
+            password = input('Password : ')
+            pm.create_password_maneger_account(username, password)
+        elif operation == 2:
+            os.system('exit')
+        else:
+            raise AttributeError('unavailable Operation')
+    
 
 
 
 
 
 def main():
+    UI()
     hello = 'shut up'
     pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
     # print(pm.login_user('bouchra', 'ramy123'))
     # print(pm.logout_user('zahra'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
-    print(pm.login_user('el-hawwary', 'Ramy@04_2007'))
-    pm.remove_user('Ramy@04_2007')
+    # print(pm.login_user('el-hawwary', 'Ramy@04_2007'))
+    # pm.remove_user('Ramy@04_2007')
     # pm.create_password_maneger_account('el-hawwary', 'Ramy@04_2007')
 
     # print(pm.add_account('google', 'ramy', 'hrhrh'))
@@ -216,6 +233,7 @@ def main():
     # print(pm.show_account('facebook', 'ramy'))
     # print(pm.delete_account('instagram', 'ramy'))
     # print(pm.show_account('github', 'ramy'))
+    # pm.remove_user('Ramy@04_2007')
     # pm.logout_user('el-hawwary')
     # pm.login_user('ramy', 'Ramy@04_2007')
     # pm.create_password_maneger_account('ramy', 'Ramy@04_2007')
@@ -224,7 +242,6 @@ def main():
     # print(pm.show_account('google', 'ramyhallah07@gmail.com'))
     # print(pm.remove_user('Ramy@04_2007'))
     # pm.logout_user('ramy')
-
 
 
 
@@ -254,35 +271,3 @@ if __name__ == '__main__':
 
 
 
-
-
-# """
-
-# Traceback (most recent call last):
-#   File "c:\Users\ramyh\Password-Manager\password_manager.py", line 243, in <module>
-#     main()
-#     ~~~~^^
-#   File "c:\Users\ramyh\Password-Manager\password_manager.py", line 212, in main
-#     print(pm.add_account('google', 'ramy', 'hrhrh'))
-#           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#   File "c:\Users\ramyh\Password-Manager\password_manager.py", line 92, in add_account
-#     dae.creat_account(self.__user, url, username, password, uk=True)
-#     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#   File "c:\Users\ramyh\Password-Manager\dae.py", line 180, in creat_account
-#     add_account(csv_path, username, password,user=user)
-#     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#   File "c:\Users\ramyh\Password-Manager\dae.py", line 189, in add_account
-#     adder.writerow({'username' : username, 'password': encrypt(password, user)})
-#                                                        ~~~~~~~^^^^^^^^^^^^^^^^
-#   File "c:\Users\ramyh\Password-Manager\dae.py", line 145, in encrypt
-#     fernet = Fernet(key)
-#   File "C:\Users\ramyh\AppData\Local\Programs\Python\Python314\Lib\site-packages\cryptography\fernet.py", line 35, in __init__
-#     key = base64.urlsafe_b64decode(key)
-#   File "C:\Users\ramyh\AppData\Local\Programs\Python\Python314\Lib\base64.py", line 129, in urlsafe_b64decode
-#     s = _bytes_from_decode_data(s)
-#   File "C:\Users\ramyh\AppData\Local\Programs\Python\Python314\Lib\base64.py", line 42, in _bytes_from_decode_data
-#     raise TypeError("argument should be a bytes-like object or ASCII "
-#                     "string, not %r" % s.__class__.__name__) from None
-# TypeError: argument should be a bytes-like object or ASCII string, not 'NoneType'
-#       f0y4hZH2RdITx7w2VUzxjSxJ_hS44egue-8eWN99nVs=
-# """

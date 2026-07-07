@@ -97,10 +97,11 @@ def file_validator(file_name):
         for row in file:
             accountsCSV.append(row)
         if accountsCSV and accountsCSV[0] == 'username,password\n':
-            pass
+            return len(accountsCSV) > 1
         else:       
             with open(file_name, 'w') as file:
                 file .write('username,password\n')
+            return False
 
 def account_validation(path, username, isdir = False):
     if not isdir:
@@ -231,8 +232,6 @@ def generate_uk(user):
     if not os.path.isfile(secret_path):
         with open(secret_path, 'wb') as user_key:
             user_key.write(uk)
-        import stat
-        os.chmod(secret_path, stat.S_IREAD)
     else: 
         return
 
