@@ -208,7 +208,7 @@ def UI():
     pm = PasswordManager()
     print(f'{'*'*80}\nAvailible operations:')
     if dae.file_validator('users/users.csv'):
-        print('1- Create New PasswordManager Account\n2-Login with existing PasswordManager Account\n3- Exit')
+        print('1- Create New PasswordManager Account\n2- Login with existing PasswordManager Account\n3- Exit\n')
         operation = int(input('Operation : '))
         if operation == 1:
             username = input('Usernaem : ').strip()
@@ -220,30 +220,71 @@ def UI():
             password = input('Password : ')
             print(pm.login_user(username, password))
             if pm.login_user(username, password) == 'Wrong password':
-                print('Availible operations: \n1-Forgot Password\n2-Exit')
+                print('Availible operations: \n1-Forgot Password\n2-Exit\n')
                 operation = int(input('Operation : '))
-                tries = 2
+                tries = 4
+                cooldown = 20
                 if operation == 1:
                     recovery_key = input('Enter Your recovery key : ')
                     while tries:
                         tries -= 1
+                        cooldown *= 2
                         if dae.loguserin(username, recovery_key, encrypt= False):
                             new_password = input('Enter you new password : ')
                             print(pm.change_user_password(username, new_password, forgotpassword=True))
+                            print(f'Your new recovery key "{dae.add_user(MastrPassword= password, return_password=True)}"')
                             login = input('Do you want to login? (y/n) : ')
                             if login == 'y':
                                 print(pm.login_user(username, new_password))
                             break
-                        recovery_key = input('wrong recovery key please confirm from it and incert it again: ')
+                        else:
+                            recovery_key = input('\nwrong recovery key please wait for the cooldown and try again: ')
+                            if not dae.loguserin(username, recovery_key, encrypt= False):
+                                for s in range(cooldown, 0, -1):
+                                    seconds = s % 60
+                                    minuts = int(s/60) % 60
+                                    print(f'{minuts:02} : {seconds:02} seconds', end = '\r')
+                                    time.sleep(1)
+     
                     if tries == 0:
                         raise ValueError('wrong recovery key')    
             if pm.log_status:
-                print('Availible operations:\n')
+                print('\nAvailible operations:\n1- Show password\n2- Add Account \n3- Delete Account\n4- Change Account\'s password\n5- Settings\n6- Logout And Exit\n')
+                operation = int(input('Operation : '))
+                if operation == 1:
+                    print('SHOW PASSWORD : \n\n')
+                    url = input('  Name of website/application account : ')
+                    account_username = input('  what username are you searching for? ')
+                    print(pm.show_account(url, account_username))
+                elif operation == 2 :
+                    print('ADD ACCOUNT : \n\n')
+                    add_url = input('  Name of website/application : ')
+                    add_username = input('  username : ')
+                    add_password = input('  password : ')
+                    print(pm.add_account(add_url, add_username, add_password))
+                elif operation == 3 :
+                    print('DELETE ACCOUNT : \n\n')
+                    del_url = input('   Name of website/application : ')
+                    del_username = input('  password : ')
+                    print(pm.delete_account(del_url, del_username))
+                elif operation == 4 :
+                    print('CHANGE ACCOUNT\'S PASSWORD : \n\n')
+                    change_url = input('    Name of website/application : ')
+                    change_username = input('   username : ')
+                    change_password = input('   New_Password : ')
+                    print(pm.change_password(change_url, change_username, change_password))
+                elif operation == 5 :
+                    print('SETTINGS : \n\n')
+                    print('    1-\n    2-\n    3-\n')
+                elif operation == 6 :
+                    ...
+                else:
+                    raise AttributeError('unavailable Operation')
 
         elif operation == 3:
             os.system('exit')
     else:
-        print('1- Create PasswordManager Account\n2- Exit')
+        print('1- Create PasswordManager Account\n2- Exit\n')
         operation = int(input('Operation : '))
         if operation == 1:
             username = input('Usernaem : '.strip())
@@ -256,7 +297,8 @@ def UI():
             raise AttributeError('unavailable Operation')
 
     if pm.log_status:
-        time.sleep(20)
+        mins = 15
+        time.sleep(60*mins)
         pm.logout_user(username)
     
 def remove(username, password):

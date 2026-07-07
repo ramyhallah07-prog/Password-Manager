@@ -70,8 +70,6 @@ def loguserin(username, MasterPassword, encrypt = True):
         hmp = hashlib.new('sha512')
         hmp.update(MasterPassword.encode())
         MasterPassword = hmp.hexdigest()
-    # elif not encrypt:
-    #     MasterPassword = MasterPassword.encode()
     with open('users/users.csv', 'r') as usersCSV:
         users = csv.DictReader(usersCSV)
         for user in users: 
