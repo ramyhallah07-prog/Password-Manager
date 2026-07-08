@@ -1,0 +1,10 @@
+balance = 0
+ice_cream = input('what flavor do you want').lower()
+(cho) = 4
+stra = 5
+van = 3
+coocie = 6
+if ice_cream == 'chocolate':
+    cho + balance
+    print('your total will be ,(cho) ') 
+   
