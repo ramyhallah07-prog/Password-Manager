@@ -211,12 +211,13 @@ def UI():
         print('1- Create New PasswordManager Account\n2- Login with existing PasswordManager Account\n3- Exit\n')
         operation = int(input('Operation : '))
         if operation == 1:
+            timer = 15
             username = input('Usernaem : ').strip()
             password = input('Password : ')
             print(pm.create_password_maneger_account(username, password))
             print(f'Keep this recovery key in a safe place\nRecovery key:"{dae.add_user(MastrPassword= password, return_password=True)}"')
         elif operation == 2:
-            username = input('Usernaem : ').strip()
+            username = input('\nUsernaem : ').strip()
             password = input('Password : ')
             print(pm.login_user(username, password))
             if pm.login_user(username, password) == 'Wrong password':
@@ -245,7 +246,6 @@ def UI():
                                     minuts = int(s/60) % 60
                                     print(f'{minuts:02} : {seconds:02} seconds', end = '\r')
                                     time.sleep(1)
-     
                     if tries == 0:
                         raise ValueError('wrong recovery key')    
             if pm.log_status:
@@ -275,7 +275,22 @@ def UI():
                     print(pm.change_password(change_url, change_username, change_password))
                 elif operation == 5 :
                     print('SETTINGS : \n\n')
-                    print('    1-\n    2-\n    3-\n')
+                    print('    1- Logout Cooldown Timer\n\n    2- Change Users MasterPassword\n\n    3- Delete User\n\n')
+                    operation =int(input( '   Operation : '))
+                    if operation == 1:
+                        timer = int(input('    Set Logout Cooldown for : '))
+                        print(f'    Timer was seccessfully set for {timer} minuts\n     1- Exit')
+                        operation = int(input(' operation : '))
+                        if operation == 1:
+                            pm.logout_user(username)
+                            os.system('Exit')
+                                        
+                    elif operation == 2:
+                        ...
+                    elif operation == 3:
+                        ...
+                    else:
+                        ...
                 elif operation == 6 :
                     ...
                 else:
@@ -297,8 +312,7 @@ def UI():
             raise AttributeError('unavailable Operation')
 
     if pm.log_status:
-        mins = 15
-        time.sleep(60*mins)
+        time.sleep(60*timer)
         pm.logout_user(username)
     
 def remove(username, password):
