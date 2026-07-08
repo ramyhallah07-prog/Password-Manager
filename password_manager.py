@@ -204,6 +204,22 @@ class PasswordManager:
         #     print("Very Strong Password!!")
         return max(password_score, 0)
 
+pm = PasswordManager()
+def new_passwordmanager_acc():
+    print('1- Create PasswordManager Account\n2- Exit\n')
+    operation = int(input('Operation : '))
+    if operation == 1:
+        username = input('Usernaem : ').strip()
+        password = input('Password : ')
+        pm.create_password_maneger_account(username, password)
+        print(f'Keep this recovery key in a safe place\nRecovery key:"{dae.add_user(MastrPassword= password, return_password=True)}"')
+    elif operation == 2:
+        os.system('exit')
+    else:
+        raise AttributeError('unavailable Operation')
+
+
+
 def UI():
     pm = PasswordManager()
     print(f'{'*'*80}\nAvailible operations:')
@@ -299,17 +315,7 @@ def UI():
         elif operation == 3:
             os.system('exit')
     else:
-        print('1- Create PasswordManager Account\n2- Exit\n')
-        operation = int(input('Operation : '))
-        if operation == 1:
-            username = input('Usernaem : '.strip())
-            password = input('Password : ')
-            pm.create_password_maneger_account(username, password)
-            print(f'Keep this recovery key in a safe place\nRecovery key:"{dae.add_user(MastrPassword= password, return_password=True)}"')
-        elif operation == 2:
-            os.system('exit')
-        else:
-            raise AttributeError('unavailable Operation')
+        new_passwordmanager_acc()
 
     if pm.log_status:
         time.sleep(60*timer)
