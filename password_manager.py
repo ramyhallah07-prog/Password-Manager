@@ -32,7 +32,7 @@ class PasswordManager:
             if not self.__login:
                 self.__login = True
                 self.__user = username
-                if os.path.isfile(f'users/{self.__user}.zip') : dae.decrypt_folder(self.__user)
+                if os.path.isfile(f'users/{self.__user}.zip'): dae.decrypt_folder(self.__user)
                 return f'{self.__user} Logged in Successfully'
             elif self.__login and self.__user == username:
                 return 'user already logegd in'
@@ -188,8 +188,8 @@ class PasswordManager:
         if len(set(password)) < len(password) / 2:
              password_score -= 10
         password_score += min(len(password)*2, 20)
-        if len(password) >= 16 : password_score += 20
-        elif len(password) >= 12 : password_score += 10
+        if len(password) >= 16: password_score += 20
+        elif len(password) >= 12: password_score += 10
         if len(password) < 8:
             password_score -= 20
         if any(patern in password.lower() for patern in COMMON_PATTERNS):
@@ -204,53 +204,121 @@ class PasswordManager:
         #     print("Very Strong Password!!")
         return max(password_score, 0)
 
-pm = PasswordManager()
-def new_passwordmanager_acc():
-    print('1- Create PasswordManager Account\n2- Exit\n')
-    operation = int(input('Operation : '))
-    if operation == 1:
-        username = input('Usernaem : ').strip()
-        password = input('Password : ')
-        pm.create_password_maneger_account(username, password)
-        print(f'Keep this recovery key in a safe place\nRecovery key:"{dae.add_user(MastrPassword= password, return_password=True)}"')
-    elif operation == 2:
-        os.system('exit')
+#MENU PRINTERS:
+def home_menu():
+    if dae.file_validator('users/users.csv'):
+        print('Password Manager: \n')
+        print('\t1- Create New PasswordManager Account\n\t2- Login with existing PasswordManager Account\n\t3- Exit\n\t')
     else:
-        raise AttributeError('unavailable Operation')
+        print('1- Create PasswordManager Account\n\t2- Exit\n\t')
+
+def newuser_menu():
+    print('Creating New User Account: \n')
+    username = input('\tUsernaem: ').strip()
+    password = input('\tPassword: ')
+    print(f'\t{pm.create_password_maneger_account(username, password)}')
+    print(f'\tKeep this recovery key in a safe place\nRecovery key:"{dae.add_user(MastrPassword= password, return_password=True)}"')
+
+def loging_menu():
+    print('Logging in: \n')
+    username = input('\tUsernaem: ').strip()
+    password = input('\tPassword: ')
+    print(f'\t{pm.login_user(username, password)}')
+
+def main_menu():
+    print('Main Menu: \n')
+    print('\t1- Show password\n\t2- Add Account \n\t3- Delete Account\n\t4- Change Account\'s password\n\t5- Settings\n\t6- Logout And Exit\n')
+
+def show_password():
+    print('SHOW PASSWORD: \n')
+    url = input('\tName of website/application account: ')
+    account_username = input('\twhat username are you searching for? ')
+    print(f'\t{pm.show_account(url, account_username)}')
+
+def add_account():
+    print('ADD ACCOUNT: \n')
+    add_url = input('\tName of website/application: ')
+    add_username = input('\tUsername: ')
+    add_password = input('\tPassword: ')
+    print(f'\t{pm.add_account(add_url, add_username, add_password)}')
+
+def delete_account():
+    print('DELETE ACCOUNT: \n')
+    del_url = input('\tName of website/application: ')
+    del_username = input('\tpassword: ')
+    print(f'\t{pm.delete_account(del_url, del_username)}')
+
+def change_account_password(operation):
+    print('CHANGE ACCOUNT\'S PASSWORD: \n')
+    change_url = input('\tName of website/application: ')
+    change_username = input('\tUsername: ')
+    change_password = input('\tNew_Password: ')
+    print(f'\t{pm.change_password(change_url, change_username, change_password)}')
+
+def menu():
 
 
+
+
+
+
+#WORKING FUNCTIONS
+
+
+
+
+
+
+
+
+
+
+
+pm = PasswordManager()
+Timer = 15
+
+
+
+def forget_password(operation):
+    ...
+
+    
+
+def settings(operation):
+    print('SETTINGS: \n')
+    print('\t1- Logout Cooldown Timer\n\t2- Change Users MasterPassword\n\t3- Delete User\n')
+
+def logout(operation):
+    ...
+
+def exit(operation):
+    os.system('Exit')
 
 def UI():
     pm = PasswordManager()
     print(f'{'*'*80}\nAvailible operations:')
-    if dae.file_validator('users/users.csv'):
-        print('1- Create New PasswordManager Account\n2- Login with existing PasswordManager Account\n3- Exit\n')
-        operation = int(input('Operation : '))
-        if operation == 1:
-            timer = 15
-            username = input('Usernaem : ').strip()
-            password = input('Password : ')
-            print(pm.create_password_maneger_account(username, password))
-            print(f'Keep this recovery key in a safe place\nRecovery key:"{dae.add_user(MastrPassword= password, return_password=True)}"')
-        elif operation == 2:
-            username = input('\nUsernaem : ').strip()
-            password = input('Password : ')
-            print(pm.login_user(username, password))
+    main_menu()
+    operation = int(input('Operation: '))
+############################################################
+    if operation == 1:
+        ...
+    elif operation == 2:
+        ...
             if pm.login_user(username, password) == 'Wrong password':
                 print('Availible operations: \n1-Forgot Password\n2-Exit\n')
-                operation = int(input('Operation : '))
+                operation = int(input('Operation: '))
                 tries = 4
                 cooldown = 20
                 if operation == 1:
-                    recovery_key = input('Enter Your recovery key : ')
+                    recovery_key = input('Enter Your recovery key: ')
                     while tries:
                         tries -= 1
                         cooldown *= 2
                         if dae.loguserin(username, recovery_key, encrypt= False):
-                            new_password = input('Enter you new password : ')
+                            new_password = input('Enter you new password: ')
                             print(pm.change_user_password(username, new_password, forgotpassword=True))
                             print(f'Your new recovery key "{dae.add_user(MastrPassword= password, return_password=True)}"')
-                            login = input('Do you want to login? (y/n) : ')
+                            login = input('Do you want to login? (y/n): ')
                             if login == 'y':
                                 print(pm.login_user(username, new_password))
                             break
@@ -260,43 +328,28 @@ def UI():
                                 for s in range(cooldown, 0, -1):
                                     seconds = s % 60
                                     minuts = int(s/60) % 60
-                                    print(f'{minuts:02} : {seconds:02} seconds', end = '\r')
+                                    print(f'{minuts:02}: {seconds:02} seconds', end = '\r')
                                     time.sleep(1)
                     if tries == 0:
                         raise ValueError('wrong recovery key')    
             if pm.log_status:
-                print('\nAvailible operations:\n1- Show password\n2- Add Account \n3- Delete Account\n4- Change Account\'s password\n5- Settings\n6- Logout And Exit\n')
-                operation = int(input('Operation : '))
+                
+                operation = int(input('Operation: '))
                 if operation == 1:
-                    print('SHOW PASSWORD : \n\n')
-                    url = input('  Name of website/application account : ')
-                    account_username = input('  what username are you searching for? ')
-                    print(pm.show_account(url, account_username))
-                elif operation == 2 :
-                    print('ADD ACCOUNT : \n\n')
-                    add_url = input('  Name of website/application : ')
-                    add_username = input('  username : ')
-                    add_password = input('  password : ')
-                    print(pm.add_account(add_url, add_username, add_password))
-                elif operation == 3 :
-                    print('DELETE ACCOUNT : \n\n')
-                    del_url = input('   Name of website/application : ')
-                    del_username = input('  password : ')
-                    print(pm.delete_account(del_url, del_username))
-                elif operation == 4 :
-                    print('CHANGE ACCOUNT\'S PASSWORD : \n\n')
-                    change_url = input('    Name of website/application : ')
-                    change_username = input('   username : ')
-                    change_password = input('   New_Password : ')
-                    print(pm.change_password(change_url, change_username, change_password))
-                elif operation == 5 :
-                    print('SETTINGS : \n\n')
-                    print('    1- Logout Cooldown Timer\n\n    2- Change Users MasterPassword\n\n    3- Delete User\n\n')
-                    operation =int(input( '   Operation : '))
+
+                elif operation == 2:
+
+                elif operation == 3:
+
+                elif operation == 4:
+
+                elif operation == 5:
+
+                    operation =int(input( '\tOperation: '))
                     if operation == 1:
-                        timer = int(input('    Set Logout Cooldown for : '))
+                        timer = int(input('\tSet Logout Cooldown for: '))
                         print(f'    Timer was seccessfully set for {timer} minuts\n     1- Exit')
-                        operation = int(input(' operation : '))
+                        operation = int(input(' operation: '))
                         if operation == 1:
                             pm.logout_user(username)
                             os.system('Exit')
@@ -307,7 +360,7 @@ def UI():
                         ...
                     else:
                         ...
-                elif operation == 6 :
+                elif operation == 6:
                     ...
                 else:
                     raise AttributeError('unavailable Operation')
@@ -315,7 +368,7 @@ def UI():
         elif operation == 3:
             os.system('exit')
     else:
-        new_passwordmanager_acc()
+        
 
     if pm.log_status:
         time.sleep(60*timer)
