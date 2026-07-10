@@ -1,5 +1,5 @@
 import string
-from random import choices
+import random
 import secrets
 import dae
 import time
@@ -194,68 +194,244 @@ class PasswordManager:
             password_score -= 20
         if any(patern in password.lower() for patern in COMMON_PATTERNS):
                 password_score -= 30
-        # if 0 <= password_score < 30:
-        #     print('Weak Password!!')
-        # elif 30 <= password_score < 60:
-        #     print("Normal Password")
-        # elif 60 <= password_score < 90:
-        #     print("Strong Password")    
-        # elif password_score >= 90:
-        #     print("Very Strong Password!!")
         return max(password_score, 0)
+    
+    def username_generator(self, lenth):
+        char = string.ascii_letters
+        username = ''.join(random.choice(char) for _ in lenth) 
+        return username
+    
+
+
 
 #MENU PRINTERS:
+pm = PasswordManager()
 def home_menu():
     if dae.file_validator('users/users.csv'):
         print('Password Manager: \n')
         print('\t1- Create New PasswordManager Account\n\t2- Login with existing PasswordManager Account\n\t3- Exit\n\t')
+        operation = int(input('\tOperation: '))
+        if operation == 1:
+            newuser_menu()
+        elif operation == 2:
+            loging_menu()
+            
+        elif operation == 3:
+            os.system('Exit')
+        else:
+            raise AttributeError('Unvalid Operation')
     else:
         print('1- Create PasswordManager Account\n\t2- Exit\n\t')
+        operation = int(input('\tOperation: '))
+        if operation == 1:
+            newuser_menu()
+        elif operation == 2:
+            os.system('Exit')
+        else:
+            raise AttributeError('Unvalid Operation')
 
 def newuser_menu():
-    print('Creating New User Account: \n')
+    print('\nCreating New User Account: \n')
     username = input('\tUsernaem: ').strip()
     password = input('\tPassword: ')
     print(f'\t{pm.create_password_maneger_account(username, password)}')
     print(f'\tKeep this recovery key in a safe place\nRecovery key:"{dae.add_user(MastrPassword= password, return_password=True)}"')
 
 def loging_menu():
-    print('Logging in: \n')
+    print('\nLogging in: \n')
     username = input('\tUsernaem: ').strip()
     password = input('\tPassword: ')
     print(f'\t{pm.login_user(username, password)}')
+    forget_password(username, password)
+    if pm.log_status:
+        main_menu(username)
+        cooldown(0.01, username)
+    
+def main_menu(username):
+    if pm.log_status:
+        print('\nMain Menu: \n')
+        print('\t1- Show password\n\t2- Add Account \n\t3- Delete Account\n\t4- Change Account\'s password\n\t5- Vault\n\t6- Settings\n\t7- Logout And Exit\n')
+        operation = int(input('\tOperation: '))
+        if operation == 1:
+            show_password(username)
+        elif operation == 2:
+            add_account(username)
+        elif operation == 3:
+            delete_account(username)
+        elif operation == 4:
+            change_account_password(username)
+        elif operation == 5:
+            ...
+        elif operation == 6:
+            settings(username)
+        elif operation == 7:
+            pm.logout_user(username)
+            os.system('Exit')
 
-def main_menu():
-    print('Main Menu: \n')
-    print('\t1- Show password\n\t2- Add Account \n\t3- Delete Account\n\t4- Change Account\'s password\n\t5- Settings\n\t6- Logout And Exit\n')
-
-def show_password():
-    print('SHOW PASSWORD: \n')
+def show_password(username):
+    print('\nSHOW PASSWORD: \n')
     url = input('\tName of website/application account: ')
     account_username = input('\twhat username are you searching for? ')
     print(f'\t{pm.show_account(url, account_username)}')
+    print('\n\t1- Back to Main Menu\n\t2-Logout And Exit')
+    operation = int(input('\n\tOperation: '))
+    if operation == 1:
+        main_menu(username)
+    elif operation == 2:
+        logoutandexit(username)
 
-def add_account():
-    print('ADD ACCOUNT: \n')
+def add_account(username):
+    print('\nADD ACCOUNT: \n')
     add_url = input('\tName of website/application: ')
-    add_username = input('\tUsername: ')
-    add_password = input('\tPassword: ')
-    print(f'\t{pm.add_account(add_url, add_username, add_password)}')
+    Gusername = input('\tGenerate Username (y/n): ')
+    if Gusername == 'y':
+        lenth = int(input('\tLenth of username: '))
+        add_username = pm.username_generator(lenth)
+    elif Gusername == 'n':
+        add_username = input('\tUsername: ')
+    else:
+        raise ValueError
+    Gpassword = input('\tGenerate Password (y/n): ')
+    if Gpassword == 'y':
+        lenth = int(input('\n\tPassword Lenth: '))
+        low = input('\tLower Characters (y/n): ')
+        up = input('\tUpper Characters (y/n): ')
+        num = input('\tNumbers (y/n): ')
+        spetial = input('\tSpetial Characters (y/n): ')
+        add = input('\taddition (y/n): ')
+        lower = int(input('\tLower: ')) if low == 'y' else None
+        upper = int(input('\tUpper: ')) if up == 'y' else None
+        nums = int(input('\tNumbers: ')) if num else None
+        spetials = int(input('\tSpetial Characters: ')) if spetial == 'y' else None
+        additions = input('\tAdditions: ') if add == 'y' else None
+        add_password = pm.password_generator(lenth, lower, upper, nums, spetials, additions)
+    elif Gpassword == 'n':
+        add_password = input('\tPassword: ')
+    else:
+        raise ValueError
+    password_score = pm.passwors_validation(add_password)
+    if 0 <= password_score < 30:
+        print('\tWeak Password!!')
+    elif 30 <= password_score < 60:
+        print("\tNormal Password")
+    elif 60 <= password_score < 90:
+        print("\tStrong Password")    
+    elif password_score >= 90:
+        print("\tVery Strong Password!!")
+    print(f'\n\t{pm.add_account(add_url, add_username, add_password)}')
+    print('\n\t1- Back to Main Menu\n\t2- Logout And Exit')
+    operation = int(input('\n\tOeration: '))
+    if operation == 1:
+        print()
+        main_menu(username)
+    elif operation == 2:
+        logoutandexit(username)
 
-def delete_account():
-    print('DELETE ACCOUNT: \n')
+def delete_account(username):
+    print('\nDELETE ACCOUNT: \n')
     del_url = input('\tName of website/application: ')
     del_username = input('\tpassword: ')
     print(f'\t{pm.delete_account(del_url, del_username)}')
 
-def change_account_password(operation):
-    print('CHANGE ACCOUNT\'S PASSWORD: \n')
+def change_account_password(username):
+    print('\nCHANGE ACCOUNT\'S PASSWORD: \n')
     change_url = input('\tName of website/application: ')
     change_username = input('\tUsername: ')
-    change_password = input('\tNew_Password: ')
+    generate_password = input('\n\tGenerate Password (y/n): ')
+    if generate_password == 'n':
+        change_password = input('\tNew_Password: ')
+    elif generate_password == 'y':
+        lenth = int(input('\n\tPassword Lenth: '))
+        low = input('\tLower Characters (y/n): ')
+        up = input('\tUpper Characters (y/n): ')
+        num = input('\tNumbers (y/n): ')
+        spetial = input('\tSpetial Characters (y/n): ')
+        add = input('\taddition (y/n): ')
+        lower = int(input('\tLower: ')) if low == 'y' else None
+        upper = int(input('\tUpper: ')) if up == 'y' else None
+        nums = int(input('\tNumbers: ')) if num else None
+        spetials = int(input('\tSpetial Characters: ')) if spetial == 'y' else None
+        additions = input('\tAdditions: ') if add == 'y' else None
+        change_password = pm.password_generator(lenth, lower, upper, nums, spetials, additions)
     print(f'\t{pm.change_password(change_url, change_username, change_password)}')
+    password_score = pm.passwors_validation(change_password)
+    if 0 <= password_score < 30:
+        print('\tWeak Password!!')
+    elif 30 <= password_score < 60:
+        print("\tNormal Password")
+    elif 60 <= password_score < 90:
+        print("\tStrong Password")    
+    elif password_score >= 90:
+        print("\tVery Strong Password!!")
 
-def menu():
+
+def settings(username):
+    print('\nSETTINGS: \n')
+    print('\t1- Logout Cooldown Timer\n\t2- Change Users MasterPassword\n\t3- Delete User\n')
+    operation =int(input( '\tOperation: '))
+    if operation == 1:
+        timer = int(input('\tSet Logout Cooldown for: '))
+        cooldown(timer, username)
+        print(f'\tTimer was seccessfully set for {timer} minuts\n\t1- main menu\n\t2-Logout and exit')
+        operation = int(input('\toperation: '))
+        if operation == 1:
+            main_menu(username)
+        elif operation == 2:
+            logoutandexit(username)
+    elif operation == 2: 
+        ...
+    elif operation == 3:
+        print('\nDelete Password Manager Account: ')
+        username = input('\tUsername: ')
+        password = input('\tPassword')
+        dae.delete_user(username, password)
+
+
+
+def forget_password(username, password):
+    if pm.login_user(username, password) == 'Wrong password':
+        print('Availible operations: \n\t1- Forgot Password\n\t2- Back to main menu\n\t3- Exit\n')
+        operation = int(input('\tOperation: '))
+        tries = 4
+        cooldown = 20
+        if operation == 1:
+            recovery_key = input('\tEnter Your recovery key: ')
+            while tries:
+                tries -= 1
+                cooldown *= 2
+                if dae.loguserin(username, recovery_key, encrypt= False):
+                    new_password = input('\tEnter you new password: ')
+                    print(pm.change_user_password(username, new_password, forgotpassword=True))
+                    print(f'\tYour new recovery key "{dae.add_user(MastrPassword= password, return_password=True)}"')
+                    login = input('\tDo you want to login? (y/n): ')
+                    if login == 'y':
+                        print(pm.login_user(username, new_password))
+                    break
+                else:
+                    recovery_key = input('\n\twrong recovery key please wait for the cooldown and try again: ')
+                    if not dae.loguserin(username, recovery_key, encrypt= False):
+                        for s in range(cooldown, 0, -1):
+                            seconds = s % 60
+                            minuts = int(s/60) % 60
+                            print(f'{minuts:02}: {seconds:02} seconds', end = '\r')
+                            time.sleep(1)
+            if tries == 0:
+                raise ValueError('wrong recovery key') 
+        elif operation == 2:
+            home_menu()
+        elif operation == 3:
+            os._exit()
+            
+def cooldown(timer, username):
+    if pm.log_status:
+        time.sleep(60*timer)
+        pm.logout_user(username)
+
+
+def logoutandexit(username):
+    if pm.log_status:
+        pm.logout_user(username)
+        os.system('Exit')
 
 
 
@@ -267,112 +443,16 @@ def menu():
 
 
 
-
-
-
-
-
-
-
-pm = PasswordManager()
-Timer = 15
-
-
-
-def forget_password(operation):
+def menu():
     ...
-
     
 
-def settings(operation):
-    print('SETTINGS: \n')
-    print('\t1- Logout Cooldown Timer\n\t2- Change Users MasterPassword\n\t3- Delete User\n')
-
-def logout(operation):
-    ...
-
-def exit(operation):
-    os.system('Exit')
 
 def UI():
     pm = PasswordManager()
     print(f'{'*'*80}\nAvailible operations:')
-    main_menu()
-    operation = int(input('Operation: '))
-############################################################
-    if operation == 1:
-        ...
-    elif operation == 2:
-        ...
-            if pm.login_user(username, password) == 'Wrong password':
-                print('Availible operations: \n1-Forgot Password\n2-Exit\n')
-                operation = int(input('Operation: '))
-                tries = 4
-                cooldown = 20
-                if operation == 1:
-                    recovery_key = input('Enter Your recovery key: ')
-                    while tries:
-                        tries -= 1
-                        cooldown *= 2
-                        if dae.loguserin(username, recovery_key, encrypt= False):
-                            new_password = input('Enter you new password: ')
-                            print(pm.change_user_password(username, new_password, forgotpassword=True))
-                            print(f'Your new recovery key "{dae.add_user(MastrPassword= password, return_password=True)}"')
-                            login = input('Do you want to login? (y/n): ')
-                            if login == 'y':
-                                print(pm.login_user(username, new_password))
-                            break
-                        else:
-                            recovery_key = input('\nwrong recovery key please wait for the cooldown and try again: ')
-                            if not dae.loguserin(username, recovery_key, encrypt= False):
-                                for s in range(cooldown, 0, -1):
-                                    seconds = s % 60
-                                    minuts = int(s/60) % 60
-                                    print(f'{minuts:02}: {seconds:02} seconds', end = '\r')
-                                    time.sleep(1)
-                    if tries == 0:
-                        raise ValueError('wrong recovery key')    
-            if pm.log_status:
-                
-                operation = int(input('Operation: '))
-                if operation == 1:
+    home_menu()
 
-                elif operation == 2:
-
-                elif operation == 3:
-
-                elif operation == 4:
-
-                elif operation == 5:
-
-                    operation =int(input( '\tOperation: '))
-                    if operation == 1:
-                        timer = int(input('\tSet Logout Cooldown for: '))
-                        print(f'    Timer was seccessfully set for {timer} minuts\n     1- Exit')
-                        operation = int(input(' operation: '))
-                        if operation == 1:
-                            pm.logout_user(username)
-                            os.system('Exit')
-                                        
-                    elif operation == 2:
-                        ...
-                    elif operation == 3:
-                        ...
-                    else:
-                        ...
-                elif operation == 6:
-                    ...
-                else:
-                    raise AttributeError('unavailable Operation')
-
-        elif operation == 3:
-            os.system('exit')
-    else:
-        
-
-    if pm.log_status:
-        time.sleep(60*timer)
-        pm.logout_user(username)
     
 def remove(username, password):
     rm = PasswordManager()
