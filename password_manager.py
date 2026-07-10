@@ -20,12 +20,6 @@ class PasswordManager:
         dae.add_user(user, master_password)
         dae.generate_uk(user)
         os.system(f'attrib +h "users"')
-        answer = input('do you want to login automaticly? (y/n): ')
-        if answer == 'y':
-            self.__login = True
-        elif answer == 'n':
-            dae.encrypt_folder(self.__user)
-            return 'you need to login to continue'
 
     def login_user(self, username, master_password):#need to add the decryption for the file 
         if dae.loguserin(username, master_password):
@@ -198,8 +192,14 @@ class PasswordManager:
     
     def username_generator(self, lenth):
         char = string.ascii_letters
-        username = ''.join(random.choice(char) for _ in lenth) 
+        username = ''.join(random.choice(char) for _ in range(lenth)) 
         return username
+    
+    def vault(self):
+        if not self.__login:
+            raise ValueError('Login Failed')
+        else:
+            dae.show_all_accounts(self.__user)
     
 
 
@@ -221,7 +221,7 @@ def home_menu():
         else:
             raise AttributeError('Unvalid Operation')
     else:
-        print('1- Create PasswordManager Account\n\t2- Exit\n\t')
+        print('1- Create New PasswordManager Account\n\t2- Exit\n\t')
         operation = int(input('\tOperation: '))
         if operation == 1:
             newuser_menu()
@@ -236,6 +236,13 @@ def newuser_menu():
     password = input('\tPassword: ')
     print(f'\t{pm.create_password_maneger_account(username, password)}')
     print(f'\tKeep this recovery key in a safe place\nRecovery key:"{dae.add_user(MastrPassword= password, return_password=True)}"')
+    answer = input('Do you want to Login automaticly? (y/n): ')
+    if answer == 'y':
+        pm.login_user(username)
+    elif answer == 'n':
+        dae.encrypt_folder(username)
+        print('You need to Login to continue to the main menu')
+        home_menu()
 
 def loging_menu():
     print('\nLogging in: \n')
@@ -261,7 +268,7 @@ def main_menu(username):
         elif operation == 4:
             change_account_password(username)
         elif operation == 5:
-            ...
+            pm.vault()
         elif operation == 6:
             settings(username)
         elif operation == 7:
@@ -301,7 +308,7 @@ def add_account(username):
         add = input('\taddition (y/n): ')
         lower = int(input('\tLower: ')) if low == 'y' else None
         upper = int(input('\tUpper: ')) if up == 'y' else None
-        nums = int(input('\tNumbers: ')) if num else None
+        nums = int(input('\tNumbers: ')) if num == 'y' else None
         spetials = int(input('\tSpetial Characters: ')) if spetial == 'y' else None
         additions = input('\tAdditions: ') if add == 'y' else None
         add_password = pm.password_generator(lenth, lower, upper, nums, spetials, additions)
@@ -425,8 +432,7 @@ def forget_password(username, password):
 def cooldown(timer, username):
     if pm.log_status:
         time.sleep(60*timer)
-        pm.logout_user(username)
-
+        logoutandexit(username)
 
 def logoutandexit(username):
     if pm.log_status:
@@ -465,9 +471,9 @@ def remove(username, password):
 def main():
     # remove('ramy', 'Ramy@04_2007')
     UI()
-    # pm = PasswordManager()
+    pm = PasswordManager()
     # pm.create_password_maneger_account('zahra', 'ramy123')
-    # print(pm.login_user('ramy', 'Ramy@18_2016'))
+    # print(pm.login_user('zahra', 'RamyLovesZahra@<3'))
     # print(pm.logout_user('zahra'))
     # print(pm.add_account('instagram', 'ramy', 'ramy20074'))
     # print(pm.login_user('el-hawwary',))

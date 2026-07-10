@@ -4,6 +4,7 @@ import hashlib
 import os
 import shutil
 import subprocess
+from pathlib import Path
 
 
 def main():
@@ -16,7 +17,7 @@ def main():
     # print(encrypt('ramy2007'))
     # print(decrypt(b'gAAAAABqQTCyYPZSkluDgRWYSTuOEuBdCFgmMxgGJJ16LmKxwPjLtV97Eil3kLiAMRKffIQ0oPtHueNigUUMa-aWY_rpmhCA3g=='))
     # generate_uk('ramy')
-    print(decrypt('gAAAAABqS1oN98xL8z4NuxELNonbsHFIie-A5X66POoTjyqPhSxds76QwzBr8_VBpT0Vb2AoDFozA3-cVJDjUktsdWY_r-iSuw==', 'ramy'))
+    show_all_accounts('zahra')
 
     # passw = encrypt('hrgmhrmhrgm',user)
     # creat_account('ramy', 'google', 'ramy20074@gmail.com', 'ramy@1812', uk= True)
@@ -229,6 +230,18 @@ def show_account(path, username):
             if account['username'] == username:
                 return account
         return False
+
+def show_all_accounts(username):
+    user = f'users/{username}'
+    urls = []
+    for url in os.listdir(user):
+        if url.endswith('.csv'): urls.append(url)
+    for url in urls:
+        with open(f'users/{username}/{url}', 'r') as accounts:
+            print(f'{url.strip('.csv')}: ')
+            ACCOUNT = csv.DictReader(accounts)
+            for account in ACCOUNT:
+                print(f'\t{account['username']} : {decrypt(account['password'], username)}')
 
 def generate_uk(user):
     uk = Fernet.generate_key()
