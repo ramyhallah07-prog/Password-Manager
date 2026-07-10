@@ -415,7 +415,7 @@ def change_account_password(username):
 
 def settings(username):
     print('\nSETTINGS: \n')
-    print('\t1- Logout Cooldown Timer\n\t2- Change Users MasterPassword\n\t3- Delete User\n')
+    print('\t1- Logout Cooldown Timer\n\t2- Change Users MasterPassword\n\t3- Back to Main Menu\n\t4- Delete User\n')
     operation =int(input( '\tOperation: '))
     if operation == 1:
         timer = float(input('\tSet Logout Cooldown for: '))
@@ -442,6 +442,9 @@ def settings(username):
             print(f'\tYour new recovery key "{dae.add_user(MastrPassword= new_passwoerd, return_password=True)}"')
 
     elif operation == 3:
+        if pm.log_status:
+            main_menu(username)
+    elif operation == 4:
         print('\nDelete Password Manager Account: ')
         username = input('\tUsername: ')
         password = input('\tPassword: ')
@@ -530,13 +533,6 @@ def logoutandexit(username):
 def UI():
     print(f'{'*'*80}\nAvailible operations:')
     home_menu()
-
-# window = Tk()
-# window.geometry('680x680')
-# window.title('Password Manager')
-# # icon = PhotoImage(file='logo.jpg')
-# # window.iconphoto(True, icon)
-# window.config(background='#1b1a1a')
 
 
 def main():
