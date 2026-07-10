@@ -4,7 +4,8 @@ import secrets
 import dae
 import time
 import os
-
+from tkinter import *
+from threading import Timer
 
 class PasswordManager:
     def __init__(self):
@@ -209,6 +210,9 @@ class PasswordManager:
 
 #MENUS:
 pm = PasswordManager()
+logout_timer = None
+timer = 60*15
+
 def home_menu():
     if dae.file_validator('users/users.csv'):
         print('Password Manager: \n')
@@ -246,6 +250,7 @@ def newuser_menu():
         print('You need to Login to continue to the main menu')
         home_menu()
     else:
+        logoutandexit(username)
         raise AttributeError('Unvalid Operation')
 
 def loging_menu():
@@ -255,8 +260,9 @@ def loging_menu():
     print(f'\t{pm.login_user(username, password)}')
     forget_password(username, password)
     if pm.log_status:
+        cooldown(timer, username)
         main_menu(username)
-    
+
 def main_menu(username):
     if pm.log_status:
         print('\nMain Menu: \n')
@@ -283,8 +289,9 @@ def main_menu(username):
         elif operation == 6:
             settings(username)
         elif operation == 7:
-            logoutandexit()
+            logoutandexit(username)
         else:
+            logoutandexit(username)
             raise AttributeError('Unvalid Operation')
 
 def show_password(username):
@@ -299,6 +306,7 @@ def show_password(username):
     elif operation == 2:
         logoutandexit(username)
     else:
+        logoutandexit(username)
         raise AttributeError('Unvalid Operation')
 
 def add_account(username):
@@ -311,6 +319,7 @@ def add_account(username):
     elif Gusername == 'n':
         add_username = input('\tUsername: ')
     else:
+        logoutandexit(username)
         raise ValueError
     Gpassword = input('\tGenerate Password (y/n): ')
     if Gpassword == 'y':
@@ -329,6 +338,7 @@ def add_account(username):
     elif Gpassword == 'n':
         add_password = input('\tPassword: ')
     else:
+        logoutandexit(username)
         raise ValueError
     password_score = pm.passwors_validation(add_password)
     if 0 <= password_score < 30:
@@ -360,6 +370,7 @@ def delete_account(username):
     elif operation == 2:
         logoutandexit(username)
     else:
+        logoutandexit(username)
         raise AttributeError('Unvalid Operation')
 
 def change_account_password(username):
@@ -399,6 +410,7 @@ def change_account_password(username):
     elif operation == 2:
         logoutandexit(username)
     else:
+        logoutandexit(username)
         raise AttributeError('Unvalid Operation')
 
 def settings(username):
@@ -406,9 +418,9 @@ def settings(username):
     print('\t1- Logout Cooldown Timer\n\t2- Change Users MasterPassword\n\t3- Delete User\n')
     operation =int(input( '\tOperation: '))
     if operation == 1:
-        timer = int(input('\tSet Logout Cooldown for: '))
-        cooldown(timer, username)
-        print(f'\tTimer was seccessfully set for {timer} minuts')
+        timer = float(input('\tSet Logout Cooldown for: '))
+        cooldown(timer*60, username)
+        print(f'\tTimer was seccessfully set for {timer} minut(s)')
         print('\n\t1- Back to Main Menu\n\t2-Logout And Exit')
         operation = int(input('\n\tOperation: '))
         if operation == 1:
@@ -416,6 +428,7 @@ def settings(username):
         elif operation == 2:
             logoutandexit(username)
         else:
+            logoutandexit(username)
             raise AttributeError('Unvalid Operation')
     elif operation == 2: 
         print('\nChanging User\'s MasterPassword: \n')
@@ -440,6 +453,7 @@ def settings(username):
         elif operation == 2:
             logoutandexit(username)
         else:
+            logoutandexit(username)
             raise AttributeError('Unvalid Operation')
 
 def forget_password(username, password):
@@ -467,10 +481,12 @@ def forget_password(username, password):
                         elif operation == 2:
                             logoutandexit(username)
                         else:
+                            logoutandexit(username)
                             raise AttributeError('Unvalid Operation')
                     elif login == 'n':
                         logoutandexit(username)
                     else:
+                        logoutandexit(username)
                         raise AttributeError('Unvalid Operation')
                 else:
                     recovery_key = input('\n\twrong recovery key please wait for the cooldown and try again: ')
@@ -481,21 +497,31 @@ def forget_password(username, password):
                             print(f'{minuts:02}: {seconds:02} seconds', end = '\r')
                             time.sleep(1)
             if tries == 0:
+                logoutandexit(username)
                 raise ValueError('wrong recovery key') 
         elif operation == 2:
             home_menu()
             tries -= 1
             if tries == 0:
+                logoutandexit(username)
                 raise ValueError('wrong recovery key') 
         elif operation == 3:
             os._exit()
             
 def cooldown(timer, username):
-    if pm.log_status:
-        time.sleep(60*timer)
-        logoutandexit(username)
+    global logout_timer
+
+    if logout_timer:
+        logout_timer.cancel()
+    logout_timer = Timer(timer,logoutandexit, args=(username,))
+    logout_timer.daemon = True
+    logout_timer.start()
 
 def logoutandexit(username):
+    global logout_timer
+    if logout_timer:
+        logout_timer.cancel()
+
     if pm.log_status:
         pm.logout_user(username)
         os.system('Exit')
@@ -505,9 +531,18 @@ def UI():
     print(f'{'*'*80}\nAvailible operations:')
     home_menu()
 
+# window = Tk()
+# window.geometry('680x680')
+# window.title('Password Manager')
+# # icon = PhotoImage(file='logo.jpg')
+# # window.iconphoto(True, icon)
+# window.config(background='#1b1a1a')
+
+
 def main():
     # remove('ramy', 'Ramy@04_2007')
     UI()
+    # window.mainloop()
     # pm.create_password_maneger_account('zahra', 'ramy123')
     # print(pm.login_user('zahra', 'RamyLovesZahra@<3'))
     # print(pm.logout_user('zahra'))
