@@ -533,7 +533,6 @@ class CLI(PasswordManager):
             self._username = None
             os.system('Exit')
     
-
 def UI():
     pm = CLI()
     print(f'{'*'*80}\nAvailible operations:')
