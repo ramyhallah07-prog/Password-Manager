@@ -5,8 +5,10 @@ import customtkinter as ctk
 from password_manager import GUI
 
 def main():
-    pm = Login_Menu()
-    pm.mainloop()
+    # pm = Login_Menu()
+    # pm.mainloop()
+    pw = Main_Menu()
+    pw.mainloop()
 #Creat Login menu
 class Login_Menu(ctk.CTk, GUI):
     def __init__(self):
@@ -39,13 +41,24 @@ class Login_Menu(ctk.CTk, GUI):
         self._login_text = ctk.CTkLabel(self.frame, text= ui.loging_menu(username, password))
         ui.loging_menu(username, password)
         self._login_text.grid(row=4, column=0)
-
+    @property
+    def user(self):
+        return self._username.get()
 #creat main menu
+class Main_Menu_tabs(ctk.CTkTabview):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+        self.add('vault')
+        self.add('settings')
+        self.add('Generator')
+        self.grid(row=10, column=0)
+        
+class Main_Menu(ctk.CTk, GUI):
+    def __init__(self):
+        super().__init__()
 
-
-
-
-
+        tabs = Main_Menu_tabs(master=self)
+        tabs.grid(row=0, column=0, pady=20, padx=20)
 #creat settings menu
 
 
