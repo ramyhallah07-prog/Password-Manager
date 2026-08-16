@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4096" height="1024" viewBox="0 0 4096 1024">
+  <title>Vault — Your passwords. Secured.</title>
+  <desc>Premium minimalist cybersecurity banner. Fully vector SVG.</desc>
+
+  <!-- Background -->
+  <rect width="4096" height="1024" fill="#0B0B0D"/>
+
+  <!-- Subtle structural panels -->
+  <path d="M0 0H4096V1024H0Z" fill="#0B0B0D"/>
+  <path d="M0 0H4096" stroke="#151518" stroke-width="22"/>
+  <path d="M0 1024H4096" stroke="#151518" stroke-width="22"/>
+
+  <!-- Minimal diagonal brand accents -->
+  <path d="M0 120 L720 0 H870 L0 170 Z" fill="#151518"/>
+  <path d="M0 160 L650 0" stroke="#D72638" stroke-width="5"/>
+  <path d="M4096 850 L3380 1024 H3230 L4096 800 Z" fill="#151518"/>
+  <path d="M4096 815 L3440 1024" stroke="#D72638" stroke-width="5"/>
+
+  <!-- Large watermark shield -->
+  <g opacity="0.13" transform="translate(2910 40)">
+    <path d="M420 20 L850 160 V475 C850 735 690 910 420 1000 C150 910 10 735 10 475 V160 Z"
+          fill="none" stroke="#A1A1AA" stroke-width="34" stroke-linejoin="round"/>
+    <path d="M285 410 V300 C285 220 555 220 555 300 V410"
+          fill="none" stroke="#A1A1AA" stroke-width="38" stroke-linecap="round"/>
+    <rect x="245" y="380" width="350" height="310" rx="62"
+          fill="none" stroke="#A1A1AA" stroke-width="34"/>
+    <circle cx="420" cy="505" r="58" fill="#D72638"/>
+    <rect x="398" y="545" width="44" height="125" rx="20" fill="#D72638"/>
+  </g>
+
+  <!-- Main logo -->
+  <g transform="translate(245 185)">
+    <!-- shield -->
+    <path d="M250 20 L535 112 V310 C535 485 445 605 250 675 C55 605 -35 485 -35 310 V112 Z"
+          fill="#151518" stroke="#F5F5F7" stroke-width="28" stroke-linejoin="round"/>
+    <!-- lock shackle -->
+    <path d="M135 315 V220 C135 145 365 145 365 220 V315"
+          fill="none" stroke="#F5F5F7" stroke-width="34" stroke-linecap="round"/>
+    <!-- lock body -->
+    <rect x="110" y="285" width="280" height="255" rx="54"
+          fill="#151518" stroke="#F5F5F7" stroke-width="30"/>
+    <!-- keyhole -->
+    <circle cx="250" cy="395" r="47" fill="#D72638"/>
+    <rect x="232" y="425" width="36" height="95" rx="16" fill="#D72638"/>
+  </g>
+
+  <!-- Divider -->
+  <line x1="1050" y1="210" x2="1050" y2="810" stroke="#2E2E35" stroke-width="5"/>
+
+  <!-- Wordmark -->
+  <text x="1185" y="510"
+        fill="#F5F5F7"
+        font-family="Montserrat, Inter, Arial, sans-serif"
+        font-size="270"
+        font-weight="800"
+        letter-spacing="8">VAULT</text>
+
+  <!-- Tagline -->
+  <text x="1190" y="650"
+        fill="#A1A1AA"
+        font-family="Montserrat, Inter, Arial, sans-serif"
+        font-size="92"
+        font-weight="500"
+        letter-spacing="1">Your passwords. Secured</text>
+  <circle cx="2185" cy="630" r="15" fill="#D72638"/>
+
+  <!-- Small trust line -->
+  <text x="1192" y="755"
+        fill="#2E2E35"
+        font-family="Montserrat, Inter, Arial, sans-serif"
+        font-size="34"
+        font-weight="600"
+        letter-spacing="7">PRIVATE • SIMPLE • SECURE</text>
+</svg>

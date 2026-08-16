@@ -95,7 +95,7 @@ def delete_user(username, MasterPassword):
     if loguserin(username, MasterPassword):
         remove_account('users/users.csv', username)
         shutil.rmtree(f'users/{username}', ignore_errors=True)
-    elif not loguserin:
+    else:
         return 'wrong password'
 
 def file_validator(file_name):

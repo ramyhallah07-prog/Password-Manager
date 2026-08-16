@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="2048" height="2048" viewBox="0 0 2048 2048">
+  <title>Vault Main Logo — Shield Lock Red Keyhole</title>
+  <desc>Editable vector version of the Vault shield, lock and red keyhole logo.</desc>
+
+  <!-- Transparent background -->
+
+  <!-- Shield outline -->
+  <path
+    d="M 355 425
+       C 575 395, 775 320, 1024 145
+       C 1273 320, 1473 395, 1693 425
+       L 1693 660
+       C 1693 1110, 1455 1465, 1024 1708
+       C 593 1465, 355 1110, 355 660
+       Z"
+    fill="none"
+    stroke="#F5F5F7"
+    stroke-width="72"
+    stroke-linejoin="miter"
+  />
+
+  <!-- Lock shackle -->
+  <path
+    d="M 825 790
+       L 825 680
+       C 825 555, 910 485, 1024 485
+       C 1138 485, 1223 555, 1223 680
+       L 1223 790"
+    fill="none"
+    stroke="#F5F5F7"
+    stroke-width="68"
+    stroke-linecap="round"
+  />
+
+  <!-- Lock body -->
+  <path
+    d="M 775 760
+       H 1273
+       C 1328 760, 1365 797, 1365 850
+       V 1125
+       C 1365 1180, 1328 1217, 1273 1217
+       H 775
+       C 720 1217, 683 1180, 683 1125
+       V 850
+       C 683 797, 720 760, 775 760
+       Z"
+    fill="none"
+    stroke="#F5F5F7"
+    stroke-width="68"
+    stroke-linejoin="round"
+  />
+
+  <!-- Small rounded end caps matching the reference logo -->
+  <path
+    d="M 683 1085
+       C 683 1160, 710 1195, 755 1215"
+    fill="none"
+    stroke="#F5F5F7"
+    stroke-width="68"
+    stroke-linecap="round"
+  />
+  <path
+    d="M 1365 1085
+       C 1365 1160, 1338 1195, 1293 1215"
+    fill="none"
+    stroke="#F5F5F7"
+    stroke-width="68"
+    stroke-linecap="round"
+  />
+
+  <!-- Red keyhole -->
+  <circle cx="1024" cy="1030" r="76" fill="#D72638"/>
+  <rect x="990" y="1080" width="68" height="190" rx="34" fill="#D72638"/>
+</svg>

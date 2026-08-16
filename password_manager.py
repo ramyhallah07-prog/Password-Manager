@@ -4,7 +4,6 @@ import secrets
 import dae
 import time
 import os
-from tkinter import *
 from threading import Timer
 
 class PasswordManager:
@@ -538,11 +537,6 @@ def UI():
     print(f'{'*'*80}\nAvailible operations:')
     pm.home_menu()
     print(f'{'*'*80}')
-
-
-
-
-
 
 class GUI(PasswordManager):
     def __init__(self):
