@@ -107,7 +107,7 @@ class LoginMenu(ctk.CTkFrame):
 
         #logics:
         self.username_entry.bind('<KeyPress-Return>', lambda e: self.go_password(self.password_entry))
-        self.password_entry.bind('<KeyPress-Return>', self.go_login)
+        self.password_entry.bind('<KeyPress-Return>', self.log_in)
         self.forget_password.bind('<Enter>', lambda e: self.forget_password.configure(text_color = HOVER_COLOR))
         self.forget_password.bind('<Leave>', lambda e: self.forget_password.configure(text_color = TEXT_COLOR))
         self.create_account.bind('<Enter>', lambda e: self.create_account.configure(text_color = HOVER_COLOR))
@@ -143,7 +143,7 @@ class LoginMenu(ctk.CTkFrame):
                                            font=TITLE_SMALL)
         self.cracc_username = ctk.CTkEntry(self.cracc_menu, 
                                       placeholder_text='Enter a Username',
-                                      font=ENTRY)
+                                      font=ENTRY)                               
         self.cracc_password_label = ctk.CTkLabel(self.cracc_menu, 
                                                 text='Create Password', 
                                                 fg_color='transparent',
@@ -195,8 +195,8 @@ class LoginMenu(ctk.CTkFrame):
         self.cracc_password_progressbar.set(0)
         self.cracc_password.bind('<KeyPress>', lambda e :self.password_validation(self.cracc_password, self.cracc_password_progressbar))
         self.cracc_password_confirmation.bind('<KeyRelease>', lambda e: self.confirme_password(self.cracc_password, self.cracc_password_confirmation, self.cracc_button))
-        self.cracc_username.bind('<Keypress>', lambda e: self.go_password(self.cracc_password))
-        self.cracc_password.bind('<Keypress>', lambda e: self.go_password(self.cracc_password_confirmation))
+        self.cracc_username.bind('<KeyPress-Return>', lambda e: self.go_password(self.cracc_password))
+        self.cracc_password.bind('<KeyPress-Return>', lambda e: self.go_password(self.cracc_password_confirmation))
         self.cracc_password_confirmation.bind('<KeyPress>', lambda e: self.go_login)
 
 
@@ -222,8 +222,79 @@ class LoginMenu(ctk.CTkFrame):
         self.cracc_button.pack(anchor='center')
 
         #Forget password
+        self.fp_menu = ctk.CTkFrame(self, fg_color= SURFACE_COLOR)
+        self.fp_title = ctk.CTkLabel(self.fp_menu,
+                                     text='Password Recovery',
+                                     font=TITLE_LARGE,
+                                     fg_color=SURFACE_COLOR)
+        self.fp_recovframe = ctk.CTkFrame(self.fp_menu, fg_color=SURFACE_COLOR)
+        self.fp_recovery_code = ctk.CTkEntry(self.fp_recovframe,
+                                          placeholder_text='Enter your recovery secret-key',
+                                          font=ENTRY)
+        self.fp_skvalidation = ctk.CTkButton(self.fp_recovframe,
+                                           fg_color=ACCENT_COLOR,
+                                           hover_color=HOVER_COLOR,
+                                           text='Submit',
+                                           font=BUTTON,
+                                           command= self.confitm_sk)
+        #enp = enter new password
+        self.fp_enp_label = ctk.CTkLabel(self.fp_menu,
+                                      text='New Password',
+                                      font= TITLE_SMALL,
+                                      fg_color='transparent')
+        self.fp_enp = ctk.CTkEntry(self.fp_menu,
+                                placeholder_text='Enter a new password',
+                                font=ENTRY,
+                                show='*')
+        self.fp_enp_confirmation = ctk.CTkEntry(self.fp_menu,
+                                placeholder_text='confirme the new password',
+                                font=ENTRY,
+                                show='*')
+        self.fp_btnfrm =  ctk.CTkFrame(self.fp_menu, fg_color=SURFACE_COLOR)
+        self.fp_enp_submit = ctk.CTkButton(self.fp_btnfrm,
+                                        text= 'Change passowrd',
+                                        font=BUTTON,
+                                        fg_color=ACCENT_COLOR,
+                                        hover_color=HOVER_COLOR,
+                                        command=self.submit_np)
+        self.fp_showpassword_rememberaccount = ctk.CTkFrame(self.fp_menu, fg_color=SURFACE_COLOR) 
+        self.fp_show_password = ctk.CTkCheckBox(self.fp_showpassword_rememberaccount,
+                                             text='show password',
+                                             font=ENTRY,
+                                             fg_color= ACCENT_COLOR,
+                                             hover_color= HOVER_COLOR,
+                                             variable=self.show_password,
+                                             command=self.showing_password)
+        self.fp_rememberaccount =  ctk.CTkCheckBox(self.fp_showpassword_rememberaccount,
+                                             text='remember login',
+                                             font=ENTRY,
+                                             fg_color= ACCENT_COLOR,
+                                             hover_color= HOVER_COLOR,
+                                             variable=self.remember_my_account,
+                                             command=self.remember_account)
 
 
+
+        #forget password logics
+        
+
+
+        #Layout
+        self.fp_menu.columnconfigure(0, weight=1, uniform='a')
+        self.fp_menu.rowconfigure((0,1), weight=2, uniform='a')
+        self.fp_menu.rowconfigure((2,3,4,5,6), weight=1, uniform='v')
+        self.fp_title.grid(row=0, column=0, sticky='news', padx=10, pady=10)
+        self.fp_recovframe.grid(row=1, column=0, sticky='news', padx=100, pady=20)
+        self.fp_recovery_code.pack(side='left', fill='x', expand=True)
+        self.fp_skvalidation.pack(side='left', padx=30)
+        self.fp_enp_label.grid(row=2, column=0, sticky='sw', padx=100)
+        self.fp_enp.grid(row=3, column=0, sticky='new', padx=100)
+        self.fp_enp_confirmation.grid(row=4, column=0, sticky='new', padx=100)
+        self.fp_showpassword_rememberaccount.grid(row=5, column=0, sticky='news', padx=100, pady=10)
+        self.fp_show_password.pack(side='left', padx=10)
+        self.fp_rememberaccount.pack(side='left', padx=40)
+        self.fp_btnfrm.grid(row=6, column=0, sticky='ew')
+        self.fp_enp_submit.pack(anchor='center')
 
 
 
@@ -259,7 +330,8 @@ class LoginMenu(ctk.CTkFrame):
         print(self.username_entry.get()+"\n"+self.password_entry.get())
 
     def forgot_password(self):
-        print(f'{self.username_entry.get()} forget your password')
+        self.log_layout_forget()
+        self.fp_layout()
 
     def create_acc(self):
         self.log_layout_forget()
@@ -274,15 +346,24 @@ class LoginMenu(ctk.CTkFrame):
         self.cracc_menu.pack_forget()
         self.bottom.pack_forget()
 
+    def fp_layout(self):
+        self.show_password.set(False)
+        self.fp_menu.pack(expand=True, fill='both')
+        self.bottom.pack(fill='x')
+    
     def showing_password(self):
         if self.show_password.get():
             self.password_entry.configure(show='')
             self.cracc_password.configure(show='')
             self.cracc_password_confirmation.configure(show='')
+            self.fp_enp.configure(show='')
+            self.fp_enp_confirmation.configure(show='')
         else:
             self.password_entry.configure(show='*')
             self.cracc_password.configure(show='*')
             self.cracc_password_confirmation.configure(show='*')
+            self.fp_enp.configure(show='*')
+            self.fp_enp_confirmation.configure(show='*')
 
     def password_validation(self, password, progressbar):
         score = pm.passwors_validation(password.get())
@@ -314,6 +395,11 @@ class LoginMenu(ctk.CTkFrame):
         else:
             pass2.configure(border_color= ERROR_COLOR)
 
+    def confitm_sk(self):
+        ...
+
+    def submit_np(self):
+        ...
 #connect with CLI
 
 if __name__ == '__main__':
