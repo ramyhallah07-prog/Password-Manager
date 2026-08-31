@@ -197,7 +197,7 @@ class LoginMenu(ctk.CTkFrame):
         self.cracc_password_confirmation.bind('<KeyRelease>', lambda e: self.confirme_password(self.cracc_password, self.cracc_password_confirmation, self.cracc_button))
         self.cracc_username.bind('<KeyPress-Return>', lambda e: self.go_password(self.cracc_password))
         self.cracc_password.bind('<KeyPress-Return>', lambda e: self.go_password(self.cracc_password_confirmation))
-        self.cracc_password_confirmation.bind('<KeyPress>', lambda e: self.go_login)
+        # self.cracc_password_confirmation.bind('<KeyPress>', lambda e: self.go_login)
 
 
 
@@ -257,6 +257,10 @@ class LoginMenu(ctk.CTkFrame):
                                         fg_color=ACCENT_COLOR,
                                         hover_color=HOVER_COLOR,
                                         command=self.submit_np)
+        self.fp_password_rating = ctk.CTkLabel(self.fp_menu, 
+                                            textvariable= self.password_security,
+                                            font=TITLE_SMALL)
+        self.fp_password_progressbar = ctk.CTkProgressBar(self.fp_menu, progress_color= WEAK_PASSWORD, fg_color=CARD_COLOR)
         self.fp_showpassword_rememberaccount = ctk.CTkFrame(self.fp_menu, fg_color=SURFACE_COLOR) 
         self.fp_show_password = ctk.CTkCheckBox(self.fp_showpassword_rememberaccount,
                                              text='show password',
@@ -276,13 +280,16 @@ class LoginMenu(ctk.CTkFrame):
 
 
         #forget password logics
-        
+        self.fp_password_progressbar.set(0)
+        self.fp_enp.bind('<KeyPress>', lambda e :self.password_validation(self.fp_enp, self.fp_password_progressbar))
+        self.fp_enp_confirmation.bind('<KeyRelease>', lambda e: self.confirme_password(self.fp_enp, self.fp_enp_confirmation, self.fp_enp_submit))
+        self.fp_enp.bind('<KeyPress-Return>', lambda e: self.go_password(self.fp_enp_confirmation))
 
 
         #Layout
         self.fp_menu.columnconfigure(0, weight=1, uniform='a')
         self.fp_menu.rowconfigure((0,1), weight=2, uniform='a')
-        self.fp_menu.rowconfigure((2,3,4,5,6), weight=1, uniform='v')
+        self.fp_menu.rowconfigure((2,3,4,5,6,7,8), weight=1, uniform='v')
         self.fp_title.grid(row=0, column=0, sticky='news', padx=10, pady=10)
         self.fp_recovframe.grid(row=1, column=0, sticky='news', padx=100, pady=20)
         self.fp_recovery_code.pack(side='left', fill='x', expand=True)
@@ -290,12 +297,16 @@ class LoginMenu(ctk.CTkFrame):
         self.fp_enp_label.grid(row=2, column=0, sticky='sw', padx=100)
         self.fp_enp.grid(row=3, column=0, sticky='new', padx=100)
         self.fp_enp_confirmation.grid(row=4, column=0, sticky='new', padx=100)
-        self.fp_showpassword_rememberaccount.grid(row=5, column=0, sticky='news', padx=100, pady=10)
+        self.fp_password_rating.grid(row=5, column=0, sticky='sw', padx=100)
+        self.fp_password_progressbar.grid(row=6, column=0, sticky='new', padx=100)
+        self.fp_showpassword_rememberaccount.grid(row=7, column=0, sticky='news', padx=100, pady=10)
         self.fp_show_password.pack(side='left', padx=10)
         self.fp_rememberaccount.pack(side='left', padx=40)
-        self.fp_btnfrm.grid(row=6, column=0, sticky='ew')
+        self.fp_btnfrm.grid(row=8, column=0, sticky='ew')
         self.fp_enp_submit.pack(anchor='center')
 
+    
+        
 
 
 
@@ -307,6 +318,7 @@ class LoginMenu(ctk.CTkFrame):
 
 
         self.pack(fill='both', expand=True)
+
 
 
     def log_layout(self):
@@ -404,4 +416,3 @@ class LoginMenu(ctk.CTkFrame):
 
 if __name__ == '__main__':
     main()
-    
